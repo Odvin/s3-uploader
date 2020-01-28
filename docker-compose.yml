@@ -1,0 +1,61 @@
+version: '3.5'
+
+services:
+  mongo:
+    image: mongo:4
+    expose:
+      - ${MONGO_SERVER_PORT}
+    ports:
+      - ${MONGO_SERVER_PORT}:27017
+    environment:
+      - MONGO_SERVER_PORT=${MONGO_SERVER_PORT}
+      - MONGO_USERNAME=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_DATABASE=${MONGO_DATABASE}
+    volumes:
+      - db-data:/var/lib/mongo/data
+    networks:
+      - uploader
+  api-server:
+    image: node:12
+    working_dir: /usr/src/api-server
+    environment:
+      - API_SERVER_PORT=${API_SERVER_PORT}
+      - MONGO_SERVER_HOST=${MONGO_SERVER_HOST}
+      - MONGO_SERVER_PORT=${MONGO_SERVER_PORT}
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_DATABASE=${MONGO_DATABASE}
+      - S3_ID=${S3_ID}
+      - S3_KEY=${S3_KEY}
+    ports:
+      - ${API_SERVER_PORT}:${API_SERVER_PORT}
+    expose:
+      - ${API_SERVER_PORT}
+    volumes:
+      - ./services/api-server:/usr/src/api-server
+    depends_on:
+      - mongo
+    networks:
+      - uploader
+    command: npm run api-dev
+  client-ui:
+    image: node:12
+    working_dir: /usr/src/client-ui
+    ports:
+      - ${CLIENT_UI_PORT}:${CLIENT_UI_PORT}
+    expose:
+      - ${CLIENT_UI_PORT}
+    volumes:
+      - ./services/client-ui:/usr/src/client-ui
+    networks:
+      - uploader
+    command: npm start
+
+volumes:
+  db-data:
+    driver: local
+
+networks:
+  uploader:
+    name: uploader-dev-network
