@@ -16,6 +16,8 @@ services:
       - db-data:/var/lib/mongo/data
     networks:
       - uploader
+    logging:
+      driver: none
   api-server:
     image: node:12
     working_dir: /usr/src/api-server

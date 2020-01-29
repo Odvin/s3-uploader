@@ -51,8 +51,6 @@ async function preSignedUrl(req, res, next) {
 
 async function quota(req, res, next) {
   try {
-    console.log(req.query);
-
     const errors = validationResult(req);
 
     if (!errors.isEmpty())
