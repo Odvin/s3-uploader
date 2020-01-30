@@ -1,54 +1,42 @@
 {
   "users": [
     {
-      "name": "Donald Knuth",
-      "uploads": [
-        {
-          "useCase": "document",
-          "fileType": ["text/plain", "application/pdf"],
-          "minSize": 1024,
-          "maxSize": 102400
-        },
-        {
-          "useCase": "thumbnail",
-          "fileType": ["image/png"],
-          "minSize": 1024,
-          "maxSize": 10240
-        },
-        {
-          "useCase": "picture",
-          "fileType": ["image/png", "image/jpeg"],
-          "minSize": 1024,
-          "maxSize": 10240
-        }
-      ],
+      "extId": "Donald Knuth",
+      "reseller": "FreeHost.com.ua",
       "storageUsage": 0,
       "storageSize": 1000000
     },
     {
-      "name": "Robert Martin",
-      "uploads": [
-        {
-          "useCase": "video",
-          "fileType": ["audio/mpeg", "audio/ogg"],
-          "minSize": 2048,
-          "maxSize": 204800
-        },
-        {
-          "useCase": "thumbnail",
-          "fileType": ["image/png"],
-          "minSize": 1024,
-          "maxSize": 10240
-        },
-        {
-          "useCase": "picture",
-          "fileType": ["image/png", "image/jpeg"],
-          "minSize": 1024,
-          "maxSize": 10240
-        }
-      ],
+      "extId": "Robert Martin",
+      "reseller": "FreeHost.com.ua",
       "storageUsage": 0,
       "storageSize": 1000000
+    }
+  ],
+  "cases": [
+    {
+      "case": "document",
+      "mineTypes": ["text/plain", "application/pdf"],
+      "minSize": 1024,
+      "maxSize": 102400
+    },
+    {
+      "case": "thumbnail",
+      "mineTypes": ["image/png"],
+      "minSize": 1024,
+      "maxSize": 10240
+    },
+    {
+      "case": "picture",
+      "mineTypes": ["image/png", "image/jpeg"],
+      "minSize": 1024,
+      "maxSize": 10240
+    },
+    {
+      "case": "video",
+      "mineTypes": ["audio/mpeg", "audio/ogg"],
+      "minSize": 2048,
+      "maxSize": 204800
     }
   ]
 }

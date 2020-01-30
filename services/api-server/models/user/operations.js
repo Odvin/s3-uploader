@@ -9,6 +9,10 @@ const findUserById = async userId => {
   return User.findById(userId, null, { lean: true }) || {};
 };
 
+async function userQuotas(userId) {
+  return User.findById(userId, null, {lean: true}).populate({path: 'cases'}) || {};
+}
+
 const seedUser = async users => {
   console.log(users);
   
@@ -21,5 +25,6 @@ const seedUser = async users => {
 module.exports = {
   createUser,
   findUserById,
+  userQuotas,
   seedUser
 };

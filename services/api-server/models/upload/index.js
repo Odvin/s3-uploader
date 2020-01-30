@@ -1,6 +1,7 @@
-const { createUpload, findUploadById } = require('./operations');
+const { createUpload, findUploadById, createUploadId } = require('./operations');
 
 module.exports = {
   createUpload,
-  findUploadById
+  findUploadById,
+  createUploadId
 };

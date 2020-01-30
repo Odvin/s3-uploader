@@ -1,5 +1,6 @@
-const { findUserById } = require('../../models/user');
+const { userQuotas } = require('../../models/user');
 
 module.exports = async function getUserQuota(userId) {
-  return findUserById(userId);
+  return userQuotas(userId);
+
 }

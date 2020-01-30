@@ -1,6 +1,14 @@
 version: '3.5'
 
 services:
+  redis:
+    image: 'redis'
+    ports:
+      - ${REDIS_SERVER_PORT}:${REDIS_SERVER_PORT}
+    expose:
+      - ${REDIS_SERVER_PORT}
+    networks:
+      - uploader
   mongo:
     image: mongo:4
     expose:
@@ -23,6 +31,7 @@ services:
     working_dir: /usr/src/api-server
     environment:
       - API_SERVER_PORT=${API_SERVER_PORT}
+      - REDIS_SERVER_PORT=${REDIS_SERVER_PORT}
       - MONGO_SERVER_HOST=${MONGO_SERVER_HOST}
       - MONGO_SERVER_PORT=${MONGO_SERVER_PORT}
       - MONGO_USERNAME=${MONGO_USERNAME}
@@ -38,6 +47,7 @@ services:
       - ./services/api-server:/usr/src/api-server
     depends_on:
       - mongo
+      - redis
     networks:
       - uploader
     command: npm run api-dev

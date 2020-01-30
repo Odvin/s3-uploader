@@ -4,13 +4,14 @@ const { body, query, validationResult } = require('express-validator');
 const getUserQuota = require('./getUserQuota');
 const checkUserQuota = require('./checkUserQuota');
 const createPreSignedPostUrl = require('./createPreSignedPostUrl');
+const { setObjectCache, getObjectCache } = require('../../redis/objectCache');
 
 function validate(method) {
   switch (method) {
     case 'preSignedUrl': {
       return [
         body('userId', 'User id is required').isMongoId(),
-        body('useCase', 'Define use case').isString(),
+        body('case', 'Define use case').isString(),
         body('fileName', 'File name is required').isString(),
         body('fileType', 'File type is required').isString(),
         body('fileSize', 'File size is required').isNumeric()
@@ -35,15 +36,20 @@ async function preSignedUrl(req, res, next) {
 
     const fileInfo = req.body;
 
-    const acceptable = await checkUserQuota(fileInfo);
+    const upload = await checkUserQuota(fileInfo);
 
-    if (!acceptable) {
+    if (!upload.acceptable) {
       return next(createError(422, 'Quota limitation for the file upload'));
     }
 
-    const url = await createPreSignedPostUrl(fileInfo);
+    const url = await createPreSignedPostUrl(upload);
 
-    return res.json(url);
+    await setObjectCache(upload);
+
+    const test = await getObjectCache(upload.id);
+    console.log(test);
+
+    return res.json({ url, uploadId: upload.id });
   } catch (e) {
     return next(e);
   }

@@ -17,23 +17,22 @@ function createPresignedUrl(params) {
   });
 }
 
-module.exports = function createPreSignedPostUrl(fileInfo) {
+module.exports = function createPreSignedPostUrl(upload) {
   const params = {
     Bucket: 'site-plus-direct-upload',
     Expires: 100000,
 
     Fields: {
-      key: `${fileInfo.userId}/${fileInfo.fileName}`
+      key: `${upload.reseller}/${upload.userId}/${upload.case}/${upload.id}/${upload.fileName}`
     },
     Conditions: [
       { acl: 'public-read' },
       { success_action_status: '201' },
-      ['starts-with', '$key', fileInfo.userId],
-      ['content-length-range', 0, 100000],
-      {'mimeType': fileInfo.fileType },
+      ['starts-with', '$key', `${upload.reseller}/${upload.userId}/${upload.case}/${upload.id}`],
+      ['content-length-range', upload.minSize, upload.maxSize],
+      {'mimeType': upload.mineType },
       { 'x-amz-algorithm': 'AWS4-HMAC-SHA256' }
     ]
   };
-
   return createPresignedUrl(params);
 };

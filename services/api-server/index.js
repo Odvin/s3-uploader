@@ -1,5 +1,6 @@
 const app = require('./app');
 require('./models');
+require('./redis');
 
 const {
   config: { servicePort }

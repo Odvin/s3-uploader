@@ -12,27 +12,27 @@ function App() {
       setUserQuota(quota);
     }
 
-    getUserQuota('5e30225c620dab0072fa1128');
+    getUserQuota('5e32cedcd707dd012a7626e3');
   }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log(e.target.file.files);
 
     if (e.target.file.files.length) {
       const file = e.target.file.files[0];
 
       const fileInfo = {
-        userId: '5e30225c620dab0072fa1128',
-        useCase: 'document',
+        userId: '5e32cedcd707dd012a7626e3',
+        case: 'document',
         fileName: file.name,
         fileType: file.type,
         fileSize: file.size
       };
 
-      const preSignedUrl = await reqPreSignedUrl(fileInfo);
-      const uploadRes = await uploadFile(preSignedUrl, file);
+      const {url, uploadId } = await reqPreSignedUrl(fileInfo);
+      const uploadRes = await uploadFile(url, file);
       console.log(uploadRes);
+      console.log(uploadId);
     }
   }
 
