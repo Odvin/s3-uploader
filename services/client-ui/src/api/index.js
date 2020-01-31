@@ -1,5 +1,5 @@
-import { reqQuota, reqPreSignedUrl } from './users';
+import { reqQuota, reqPreSignedUrl, reqPersistUpload } from './users';
 
 import { uploadFile } from './s3';
 
-export { reqQuota, reqPreSignedUrl, uploadFile };
+export { reqQuota, reqPreSignedUrl, reqPersistUpload, uploadFile };

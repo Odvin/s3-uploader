@@ -14,8 +14,6 @@ async function userQuotas(userId) {
 }
 
 const seedUser = async users => {
-  console.log(users);
-  
   await User.deleteMany({});
   await User.insertMany(users);
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { reqQuota, reqPreSignedUrl, uploadFile } from './api';
+import { reqQuota, reqPreSignedUrl, reqPersistUpload, uploadFile } from './api';
 
 function App() {
   const [userQuota, setUserQuota] = useState(null);
@@ -12,7 +12,7 @@ function App() {
       setUserQuota(quota);
     }
 
-    getUserQuota('5e32cedcd707dd012a7626e3');
+    getUserQuota('5e33d0d8e377440091a2543c');
   }, []);
 
   async function handleSubmit(e) {
@@ -22,7 +22,7 @@ function App() {
       const file = e.target.file.files[0];
 
       const fileInfo = {
-        userId: '5e32cedcd707dd012a7626e3',
+        userId: '5e33d0d8e377440091a2543c',
         case: 'document',
         fileName: file.name,
         fileType: file.type,
@@ -33,6 +33,17 @@ function App() {
       const uploadRes = await uploadFile(url, file);
       console.log(uploadRes);
       console.log(uploadId);
+
+      const uploadInfo = {
+        uploadId,
+        location: uploadRes.location,
+        bucket: uploadRes.bucket,
+        key: uploadRes.key,
+      }
+
+      const persistRes = await reqPersistUpload(uploadInfo);
+      
+      console.log(persistRes);
     }
   }
 

@@ -15,3 +15,10 @@ export const reqPreSignedUrl = fileInfo =>
     method: 'post',
     data: fileInfo
   });
+
+export const reqPersistUpload = uploadInfo =>
+  authFetch(`${AUTH_API_SERVICE}/${API_VERSION}/users/persist-upload`, {
+    auth: false,
+    method: 'post',
+    data: uploadInfo
+  });

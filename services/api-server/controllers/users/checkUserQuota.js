@@ -32,15 +32,16 @@ module.exports = async function checkUserQuota(fileInfo) {
   }
 
   upload.acceptable = true;
-  upload.mineType = fileInfo.fileType;
+  upload.id = createUploadId();
+  upload.bucket = 'site-plus-direct-upload';
+  upload.mimeType = fileInfo.fileType;
   upload.maxSize = uploadCase.maxSize;
   upload.minSize = uploadCase.minSize;
   upload.fileSize = fileInfo.fileSize;
-  upload.reseller = user.reseller;
   upload.case = fileInfo.case;
   upload.userId = fileInfo.userId;
   upload.fileName = fileInfo.fileName;
-  upload.id = createUploadId();
+  upload.key = `${user.reseller}/${upload.userId}/${fileInfo.case}/${upload.id}/${fileInfo.fileName}`;
 
   return upload;
 };

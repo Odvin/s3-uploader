@@ -7,6 +7,12 @@ router.post(
   users.preSignedUrl
 );
 
+router.post(
+  '/persist-upload',
+  users.validate('persistUpload'),
+  users.persistUpload
+);
+
 router.get('/quota', users.validate('quota'), users.quota);
 
 module.exports = router;

@@ -19,20 +19,20 @@ function createPresignedUrl(params) {
 
 module.exports = function createPreSignedPostUrl(upload) {
   const params = {
-    Bucket: 'site-plus-direct-upload',
+    Bucket: upload.bucket,
     Expires: 100000,
-
     Fields: {
-      key: `${upload.reseller}/${upload.userId}/${upload.case}/${upload.id}/${upload.fileName}`
+      key: upload.key
     },
     Conditions: [
       { acl: 'public-read' },
       { success_action_status: '201' },
-      ['starts-with', '$key', `${upload.reseller}/${upload.userId}/${upload.case}/${upload.id}`],
+      ['starts-with', '$key', upload.key],
       ['content-length-range', upload.minSize, upload.maxSize],
-      {'mimeType': upload.mineType },
+      {'mimeType': upload.mimeType },
       { 'x-amz-algorithm': 'AWS4-HMAC-SHA256' }
     ]
   };
+
   return createPresignedUrl(params);
 };

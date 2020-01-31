@@ -2,13 +2,13 @@
   "users": [
     {
       "extId": "Donald Knuth",
-      "reseller": "FreeHost.com.ua",
+      "reseller": "FreeHost",
       "storageUsage": 0,
       "storageSize": 1000000
     },
     {
       "extId": "Robert Martin",
-      "reseller": "FreeHost.com.ua",
+      "reseller": "FreeHost",
       "storageUsage": 0,
       "storageSize": 1000000
     }
