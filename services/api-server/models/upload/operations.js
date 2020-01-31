@@ -12,6 +12,7 @@ async function persistUserUpload(uploadInfo) {
   try {
     session.startTransaction();
 
+
     const user = await User.findById(uploadInfo.userId).session(session);
     user.storageUsage += uploadInfo.size;
 
@@ -20,7 +21,8 @@ async function persistUserUpload(uploadInfo) {
     }
 
     await user.save();
-    await Upload.create(uploadInfo, { session });
+    
+    await Upload.create([uploadInfo], { session });
 
     await session.commitTransaction();
   } catch (error) {
@@ -35,6 +37,11 @@ async function findUploadById(uploadId) {
   return Upload.findById(uploadId, null, { lean: true }) || {};
 }
 
+async function seedUpload(uploads) {
+  await Upload.deleteMany({});
+  await Upload.insertMany(uploads);
+}
+
 function createUploadId() {
   return mongoose.Types.ObjectId();
 }
@@ -43,5 +50,6 @@ module.exports = {
   createUpload,
   findUploadById,
   createUploadId,
-  persistUserUpload
+  persistUserUpload,
+  seedUpload
 };

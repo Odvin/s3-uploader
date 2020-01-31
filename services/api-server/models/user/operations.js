@@ -15,7 +15,8 @@ async function userQuotas(userId) {
 
 const seedUser = async users => {
   await User.deleteMany({});
-  await User.insertMany(users);
+  const test = await User.insertMany(users);
+  console.log(test);
 
   return 'Users seeding is done.';
 };
