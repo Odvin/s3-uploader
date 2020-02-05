@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-import { reqQuota, reqPreSignedUrl, reqPersistUpload, uploadFile } from './api';
+import { reqQuota, reqPreSignedUrl, reqPersistUpload, uploadFile } from '../../api';
 
-function App() {
+function Playground() {
   const [userQuota, setUserQuota] = useState(null);
 
   useEffect(() => {
@@ -71,4 +71,4 @@ function App() {
   );
 }
 
-export default App;
+export default Playground;
