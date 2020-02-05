@@ -1,30 +1,47 @@
-const { findUserById } = require('../../models/user');
+const { userQuotas } = require('../../models/user');
+const { createUploadId } = require('../../models/upload');
 
 module.exports = async function checkUserQuota(fileInfo) {
-  const user = await findUserById(fileInfo.userId);
+  const upload = {
+    acceptable: false
+  };
 
-  const [useCase] = user.uploads.filter(
-    upload => upload.useCase === fileInfo.useCase
+  const user = await userQuotas(fileInfo.userId);
+
+  const [uploadCase] = user.cases.filter(
+    upload => upload.case === fileInfo.case
   );
 
-  if (!useCase) {
-    return false;
+  if (!uploadCase) {
+    return upload;
   }
 
-  if (!(useCase.fileType || []).includes(fileInfo.fileType)) {
-    return false;
+  if (!(uploadCase.mineTypes || []).includes(fileInfo.fileType)) {
+    return upload;
   }
 
   if (
-    fileInfo.fileSize < useCase.minSize ||
-    useCase.maxSize < fileInfo.fileSize
+    fileInfo.fileSize < uploadCase.minSize ||
+    uploadCase.maxSize < fileInfo.fileSize
   ) {
-    return false;
+    return upload;
   }
 
   if (user.storageUsage + fileInfo.fileSize > user.storageSize) {
-    return false;
+    return upload;
   }
 
-  return true;
+  upload.acceptable = true;
+  upload.id = createUploadId();
+  upload.bucket = 'site-plus-direct-upload';
+  upload.mimeType = fileInfo.fileType;
+  upload.maxSize = uploadCase.maxSize;
+  upload.minSize = uploadCase.minSize;
+  upload.fileSize = fileInfo.fileSize;
+  upload.case = fileInfo.case;
+  upload.userId = fileInfo.userId;
+  upload.fileName = fileInfo.fileName;
+  upload.key = `${user.reseller}/${upload.userId}/${fileInfo.case}/${upload.id}/${fileInfo.fileName}`;
+
+  return upload;
 };

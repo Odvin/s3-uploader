@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { reqQuota, reqPreSignedUrl, uploadFile } from './api';
+import { reqQuota, reqPreSignedUrl, reqPersistUpload, uploadFile } from './api';
 
 function App() {
   const [userQuota, setUserQuota] = useState(null);
@@ -12,27 +12,38 @@ function App() {
       setUserQuota(quota);
     }
 
-    getUserQuota('5e30225c620dab0072fa1128');
+    getUserQuota('5e3a5dc7616eea001fd60dc9');
   }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log(e.target.file.files);
 
     if (e.target.file.files.length) {
       const file = e.target.file.files[0];
 
       const fileInfo = {
-        userId: '5e30225c620dab0072fa1128',
-        useCase: 'document',
+        userId: '5e3a5dc7616eea001fd60dc9',
+        case: 'document',
         fileName: file.name,
         fileType: file.type,
         fileSize: file.size
       };
 
-      const preSignedUrl = await reqPreSignedUrl(fileInfo);
-      const uploadRes = await uploadFile(preSignedUrl, file);
+      const {url, uploadId } = await reqPreSignedUrl(fileInfo);
+      const uploadRes = await uploadFile(url, file);
       console.log(uploadRes);
+      console.log(uploadId);
+
+      const uploadInfo = {
+        uploadId,
+        location: uploadRes.location,
+        bucket: uploadRes.bucket,
+        key: uploadRes.key,
+      }
+
+      const persistRes = await reqPersistUpload(uploadInfo);
+      
+      console.log(persistRes);
     }
   }
 

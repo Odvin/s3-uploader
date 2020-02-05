@@ -2,6 +2,7 @@ const config = {
   servicePort: process.env.API_SERVER_PORT,
   db: {
     host: process.env.MONGO_SERVER_HOST,
+    replicaHost: process.env.MONGO_SERVER_HOST_REPLICA,
     port: process.env.MONGO_SERVER_PORT,
     database: process.env.MONGO_DATABASE,
     user: process.env.MONGO_USERNAME,
@@ -20,7 +21,8 @@ const config = {
 };
 
 const mongoConfig = {
-  connectionPath: `mongodb://${config.db.host}:27017/${config.db.database}`,
+  // connectionPath: `mongodb://${config.db.host}:27017/${config.db.database}`,
+  connectionPath: `mongodb://${config.db.host}:27017,${config.db.replicaHost}:27017/${config.db.database}?replicaSet=rs0`,
   options: config.db.options
 };
 

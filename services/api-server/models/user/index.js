@@ -1,7 +1,8 @@
-const { createUser, findUserById, seedUser } = require('./operations');
+const { createUser, findUserById, seedUser, userQuotas } = require('./operations');
 
 module.exports = {
   createUser,
   findUserById,
+  userQuotas,
   seedUser
 };
