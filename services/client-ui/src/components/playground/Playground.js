@@ -12,7 +12,7 @@ function Playground() {
       setUserQuota(quota);
     }
 
-    getUserQuota('5e3a5dc7616eea001fd60dc9');
+    getUserQuota('5e3bb3f14938bd001f5b34a5');
   }, []);
 
   async function handleSubmit(e) {
@@ -22,7 +22,7 @@ function Playground() {
       const file = e.target.file.files[0];
 
       const fileInfo = {
-        userId: '5e3a5dc7616eea001fd60dc9',
+        userId: '5e3bb3f14938bd001f5b34a5',
         case: 'document',
         fileName: file.name,
         fileType: file.type,

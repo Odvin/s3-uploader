@@ -1,14 +1,19 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import { Layout } from 'antd';
 
 import Playground from './components/playground/Playground';
+import UserInfo from './components/userInfo/UserInfo';
+
+const { Content } = Layout;
 
 function Routs() {
   return (
-    <Router>
+    <Content style={{ margin: '24px 16px 0' }}>
       <Route path='/' component={Playground} exact />
+      <Route path='/user' component={UserInfo} exact />
       <Route path='/playground' component={Playground} exact />
-    </Router>
+    </Content>
   );
 }
 
