@@ -22,7 +22,7 @@ function Navigation() {
         <Menu.Item key='1'>
           <Link to='/user'>
             <Icon type='user' />
-            <span className='nav-text'>nav 1</span>
+            <span className='nav-text'>User Info</span>
           </Link>
         </Menu.Item>
         <Menu.Item key='2'>
