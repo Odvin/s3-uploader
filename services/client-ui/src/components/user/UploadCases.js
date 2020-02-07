@@ -1,17 +1,11 @@
 import React from 'react';
-
+import { useSelector } from 'react-redux';
 import { List, Icon } from 'antd';
 
 function UploadCases(props) {
-  const cases = props.cases || [];
-
-  const IconText = ({ type, text }) => (
-    <span>
-      <Icon type={type} style={{ marginRight: 8 }} />
-      {text}
-    </span>
-  );
-
+  const { cases = [] } = useSelector(state => state.userQuota);
+  
+  const editCase = props.editCase;
 
   return cases.length ? (
     <List
@@ -20,8 +14,18 @@ function UploadCases(props) {
         <List.Item
           key={item._id}
           actions={[
-            <IconText type='edit' text='edit' key='edit-case' />,
-            <IconText type='delete' text='delete' key='delete-case' />
+            <span onClick={() => editCase(item._id)}>
+              <Icon key='edit-case' type='edit' style={{ marginRight: 8 }} />
+              edit
+            </span>,
+            <span>
+              <Icon
+                key='delete-case'
+                type='delete'
+                style={{ marginRight: 8 }}
+              />
+              delete
+            </span>
           ]}
         >
           <List.Item.Meta
