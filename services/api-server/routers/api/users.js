@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { users } = require('../../controllers/');
+const { users } = require('../../controllers');
 
 router.post(
   '/pre-signed-url',

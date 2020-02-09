@@ -7,6 +7,6 @@ const caseSchema = new mongoose.Schema({
   maxSize: { type: Number, required: true }
 });
 
-const Case = mongoose.model('Case', caseSchema);
+const Cases = mongoose.model('Cases', caseSchema);
 
-module.exports = Case;
+module.exports = Cases;
