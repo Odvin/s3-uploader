@@ -3,7 +3,8 @@ import { reqQuota, reqPreSignedUrl, reqPersistUpload } from './users';
 import {
   reqUploadCases,
   reqUpdateUploadCase,
-  reqCreateUploadCase
+  reqCreateUploadCase,
+  reqRemoveUploadCase
 } from './cases';
 
 import { uploadFile } from './s3';
@@ -15,5 +16,6 @@ export {
   reqUploadCases,
   reqUpdateUploadCase,
   reqCreateUploadCase,
+  reqRemoveUploadCase,
   uploadFile
 };

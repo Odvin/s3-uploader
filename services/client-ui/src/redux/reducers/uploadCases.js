@@ -25,6 +25,11 @@ export default (state = initialState, action) => {
             : caseInStore;
         })
       };
+    case uploadCases.remove:
+      return {
+        ...state,
+        cases: state.cases.filter(c => c._id !== action.caseId)
+      };
     default:
       return state;
   }

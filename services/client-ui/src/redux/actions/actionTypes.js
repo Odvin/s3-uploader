@@ -15,5 +15,6 @@ export const uploadCases = {
   consumeEditor: 'UPLOAD_CASES_EDITOR',
   selectId: 'UPLOAD_CASES_SELECT_CASE_ID',
   add: 'UPLOAD_CASES_ADD_CASE',
-  update: 'UPLOAD_CASES_UPDATE_CASE'
+  update: 'UPLOAD_CASES_UPDATE_CASE',
+  remove: 'UPLOAD_CASES_REMOVE_CASE'
 };

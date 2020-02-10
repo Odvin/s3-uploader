@@ -1,20 +1,21 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { List, Icon, Button } from 'antd';
+import { List, Icon, Button, notification } from 'antd';
 
 import UploadCasesEditor from './UploadCaseEditor';
 
-import { reqUploadCases } from '../../api';
+import { reqUploadCases, reqRemoveUploadCase } from '../../api';
 
 import {
   setUploadCases,
   consumeUploadCaseEditor,
-  selectUploadCaseId
+  selectUploadCaseId,
+  removeUploadCase
 } from '../../redux/actions/uploadCases';
 
 function Cases(props) {
-  const { cases, editCase } = props;
+  const { cases, editCase, removeCase } = props;
 
   return (
     <List
@@ -27,7 +28,7 @@ function Cases(props) {
               <Icon key='edit-case' type='edit' style={{ marginRight: 8 }} />
               edit
             </span>,
-            <span>
+            <span onClick={() => removeCase(item._id)}>
               <Icon
                 key='delete-case'
                 type='delete'
@@ -68,9 +69,22 @@ function UploadCases(props) {
     dispatch(selectUploadCaseId(caseId));
   }
 
+  async function removeCase(caseId) {
+    const { wasRemoved = false } = await reqRemoveUploadCase(caseId);
+    if (wasRemoved) {
+      dispatch(removeUploadCase(caseId));
+    } else {
+      notification.open({
+        message: 'Cannot remove the case',
+        description: `CaseId :: ${caseId}`,
+        icon: <Icon type='warning' />
+      });
+    }
+  }
+
   return (
     <>
-      <Cases cases={cases} editCase={editCase} />
+      <Cases cases={cases} editCase={editCase} removeCase={removeCase} />
       <Button block icon='file-add' onClick={() => editCase(null)}>
         Add New Upload Case
       </Button>

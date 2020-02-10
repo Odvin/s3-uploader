@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const uploadCases = require('./uploadCases');
 const createUploadCase = require('./createUploadCase');
 const updateUploadCase = require('./updateUploadCase');
+const removeUploadCase = require('./removeUploadCase');
 
 const {
   createUploadCaseValidation,
@@ -26,7 +27,7 @@ async function create(req, res, next) {
       return res.status(400).json(createUploadCaseValidation.errors);
     }
 
-    const newUploadCase = await createUploadCase(req.body);
+    const newUploadCase = await createUploadCase(uploadCase);
     return res.json(newUploadCase);
   } catch (e) {
     return next(e);
@@ -60,4 +61,20 @@ async function update(req, res, next) {
   }
 }
 
-module.exports = { list, create, update };
+async function remove(req, res, next) {
+  try {
+    const { caseId } = req.body;
+
+    const isRemoved = await removeUploadCase(caseId);
+
+    if (!isRemoved) {
+      return next(createError(422, 'Incorrect case upload ID'));
+    }
+
+    return res.json({ wasRemoved: true });
+  } catch (e) {
+    return next(e);
+  }
+}
+
+module.exports = { list, create, update, remove };

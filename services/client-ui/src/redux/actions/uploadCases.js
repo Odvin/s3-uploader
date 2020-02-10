@@ -19,3 +19,7 @@ export const addUploadCase = uploadCase => {
 export const updateUploadCase = uploadCase => {
   return { type: uploadCases.update, uploadCase };
 };
+
+export const removeUploadCase = caseId => {
+  return { type: uploadCases.remove, caseId };
+};

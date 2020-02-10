@@ -4,7 +4,11 @@ import { Modal, Button, Form, Input, Slider, Select } from 'antd';
 
 import { reqUpdateUploadCase, reqCreateUploadCase } from '../../api';
 
-import { consumeUploadCaseEditor, addUploadCase, updateUploadCase } from '../../redux/actions/uploadCases';
+import {
+  consumeUploadCaseEditor,
+  addUploadCase,
+  updateUploadCase
+} from '../../redux/actions/uploadCases';
 
 const { Option } = Select;
 
@@ -44,8 +48,6 @@ function UploadCaseEditor(props) {
   async function editUploadCase() {
     await validateFields(async (err, values) => {
       if (!err) {
-        console.log('==== Edit upload case ====');
-
         const uploadCase = {
           name: values.name,
           minSize: values.limits[0] ? values.limits[0] * MBSize : 1024,
@@ -69,7 +71,7 @@ function UploadCaseEditor(props) {
   }
 
   function validateToExistedUploadCasesNames(rule, value, callback) {
-    // When creating new upload case check that the name not in use
+    // When creating new upload case check that the name is not in use
     // For new upload case activeUploadCaseId is null
     if (!activeUploadCaseId) {
       const uploadCasesNames = cases.map(c => c.case);

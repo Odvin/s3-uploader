@@ -1,6 +1,7 @@
 const {
   createCase,
   updateCase,
+  removeCase,
   isCaseExists,
   findCaseById,
   seedCases,
@@ -11,6 +12,7 @@ const {
 module.exports = {
   createCase,
   updateCase,
+  removeCase,
   isCaseExists,
   findCaseById,
   seedCases,

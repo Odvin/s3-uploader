@@ -6,7 +6,7 @@ async function updateUploadCase(uploadCase) {
     updatedUploadCase: null
   };
 
-  if (isCaseExists(uploadCase.caseId)) {
+  if (await isCaseExists(uploadCase.caseId)) {
     result.updatedUploadCase = await updateCase(uploadCase);
     result.isValidUploadCaseId = true;
   }

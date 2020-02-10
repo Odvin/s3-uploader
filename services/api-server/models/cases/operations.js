@@ -17,11 +17,16 @@ async function updateCase(uploadCase) {
 
 async function isCaseExists(caseId) {
   let doc = {};
+
   if (mongoose.Types.ObjectId.isValid(caseId)) {
     doc = await Cases.findById(caseId, '_id', { lean: true }).limit(1);
   }
 
   return Boolean(doc._id);
+}
+
+async function removeCase(caseId) {
+  return Cases.deleteOne({ _id: caseId }, { lean: true });
 }
 
 const findCaseById = async caseId => {
@@ -46,6 +51,7 @@ const seedCases = async cases => {
 module.exports = {
   createCase,
   updateCase,
+  removeCase,
   isCaseExists,
   findCaseById,
   getAllCasesIds,
