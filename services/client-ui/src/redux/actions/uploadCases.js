@@ -11,3 +11,11 @@ export const consumeUploadCaseEditor = isVisible => {
 export const selectUploadCaseId = caseId => {
   return { type: uploadCases.selectId, caseId };
 };
+
+export const addUploadCase = uploadCase => {
+  return { type: uploadCases.add, uploadCase };
+};
+
+export const updateUploadCase = uploadCase => {
+  return { type: uploadCases.update, uploadCase };
+};

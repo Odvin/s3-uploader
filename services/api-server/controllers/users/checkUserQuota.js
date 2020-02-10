@@ -9,14 +9,14 @@ module.exports = async function checkUserQuota(fileInfo) {
   const user = await userQuotas(fileInfo.userId);
 
   const [uploadCase] = user.cases.filter(
-    upload => upload.case === fileInfo.case
+    upload => upload.name === fileInfo.case
   );
 
   if (!uploadCase) {
     return upload;
   }
 
-  if (!(uploadCase.mineTypes || []).includes(fileInfo.fileType)) {
+  if (!(uploadCase.mimes || []).includes(fileInfo.fileType)) {
     return upload;
   }
 

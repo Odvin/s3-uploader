@@ -1,7 +1,7 @@
 const {
   createCase,
   findCaseById,
-  seedCase,
+  seedCases,
   getAllCasesIds,
   getAllUploadCases
 } = require('./operations');
@@ -9,7 +9,7 @@ const {
 module.exports = {
   createCase,
   findCaseById,
-  seedCase,
+  seedCases,
   getAllCasesIds,
   getAllUploadCases
 };

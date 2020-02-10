@@ -1,7 +1,7 @@
 const Cases = require('./cases');
 
-async function createCase(user) {
-  const newCase = new Cases(user);
+async function createCase(uploadCase) {
+  const newCase = new Cases(uploadCase);
   return newCase.save();
 }
 

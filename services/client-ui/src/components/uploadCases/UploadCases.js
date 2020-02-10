@@ -38,10 +38,10 @@ function Cases(props) {
           ]}
         >
           <List.Item.Meta
-            title={item.case}
+            title={item.name}
             description={`min: ${item.minSize}; max: ${item.maxSize} (bits)`}
           />
-          {(item.mineTypes || []).join(';  ')}
+          {(item.mimes || []).join(';  ')}
         </List.Item>
       )}
     />
