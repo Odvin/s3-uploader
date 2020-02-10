@@ -1,5 +1,7 @@
 const {
   createCase,
+  updateCase,
+  isCaseExists,
   findCaseById,
   seedCases,
   getAllCasesIds,
@@ -8,6 +10,8 @@ const {
 
 module.exports = {
   createCase,
+  updateCase,
+  isCaseExists,
   findCaseById,
   seedCases,
   getAllCasesIds,

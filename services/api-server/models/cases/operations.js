@@ -1,8 +1,27 @@
+const mongoose = require('mongoose');
 const Cases = require('./cases');
 
 async function createCase(uploadCase) {
   const newCase = new Cases(uploadCase);
   return newCase.save();
+}
+
+async function updateCase(uploadCase) {
+  const { caseId: _id } = uploadCase;
+  delete uploadCase.caseId;
+  return Cases.findByIdAndUpdate({ _id }, uploadCase, {
+    lean: true,
+    new: true
+  });
+}
+
+async function isCaseExists(caseId) {
+  let doc = {};
+  if (mongoose.Types.ObjectId.isValid(caseId)) {
+    doc = await Cases.findById(caseId, '_id', { lean: true }).limit(1);
+  }
+
+  return Boolean(doc._id);
 }
 
 const findCaseById = async caseId => {
@@ -26,6 +45,8 @@ const seedCases = async cases => {
 
 module.exports = {
   createCase,
+  updateCase,
+  isCaseExists,
   findCaseById,
   getAllCasesIds,
   getAllUploadCases,

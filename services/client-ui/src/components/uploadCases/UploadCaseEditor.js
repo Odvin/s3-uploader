@@ -4,7 +4,7 @@ import { Modal, Button, Form, Input, Slider, Select } from 'antd';
 
 import { reqUpdateUploadCase, reqCreateUploadCase } from '../../api';
 
-import { consumeUploadCaseEditor, addUploadCase } from '../../redux/actions/uploadCases';
+import { consumeUploadCaseEditor, addUploadCase, updateUploadCase } from '../../redux/actions/uploadCases';
 
 const { Option } = Select;
 
@@ -41,7 +41,7 @@ function UploadCaseEditor(props) {
 
   const { getFieldDecorator, validateFields } = props.form;
 
-  async function updateUploadCase() {
+  async function editUploadCase() {
     await validateFields(async (err, values) => {
       if (!err) {
         console.log('==== Edit upload case ====');
@@ -56,7 +56,8 @@ function UploadCaseEditor(props) {
         setProcessCaseUpdate(true);
         if (activeUploadCaseId) {
           uploadCase.caseId = activeUploadCaseId;
-          await reqUpdateUploadCase(uploadCase);
+          const updatedUploadCase = await reqUpdateUploadCase(uploadCase);
+          dispatch(updateUploadCase(updatedUploadCase));
         } else {
           const newUploadCase = await reqCreateUploadCase(uploadCase);
           dispatch(addUploadCase(newUploadCase));
@@ -114,7 +115,7 @@ function UploadCaseEditor(props) {
     <Modal
       visible={isEditorVisible}
       title='Upload Case'
-      onOk={updateUploadCase}
+      onOk={editUploadCase}
       onCancel={closeUploadCaseEditor}
       footer={[
         <Button key='back' onClick={closeUploadCaseEditor}>
@@ -124,7 +125,7 @@ function UploadCaseEditor(props) {
           key='submit'
           type='primary'
           loading={processCaseUpdate}
-          onClick={updateUploadCase}
+          onClick={editUploadCase}
         >
           Submit
         </Button>
