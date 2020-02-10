@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { seedCase, getAllCasesIds } = require('../../models/case');
+const { seedCases, getAllCasesIds } = require('../../models/cases');
 const { seedUser } = require('../../models/user');
 const Upload = require('../../models/upload/upload');
 
@@ -9,13 +9,13 @@ const { users, cases } = require('../../models/seeds.json');
 router.get('/', async (req, res, next) => {
   try {
     console.log('===== Seeding =====');
-    await seedCase(cases);
+    await seedCases(cases);
     const caseIds = await getAllCasesIds();
-    
+
     const preparedUses = users.map(user => ({
       ...user,
-      cases: caseIds, 
-    }))
+      cases: caseIds
+    }));
 
     const seedingResult = await seedUser(preparedUses);
 

@@ -1,5 +1,7 @@
 const users = require('./users');
+const cases = require('./cases');
 
 module.exports = {
-  users,
+  cases,
+  users
 };

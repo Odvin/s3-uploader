@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-import { reqQuota, reqPreSignedUrl, reqPersistUpload, uploadFile } from './api';
+import { reqQuota, reqPreSignedUrl, reqPersistUpload, uploadFile } from '../../api';
 
-function App() {
+function Playground() {
   const [userQuota, setUserQuota] = useState(null);
 
   useEffect(() => {
@@ -12,7 +12,7 @@ function App() {
       setUserQuota(quota);
     }
 
-    getUserQuota('5e3a5dc7616eea001fd60dc9');
+    getUserQuota('5e3bb3f14938bd001f5b34a5');
   }, []);
 
   async function handleSubmit(e) {
@@ -22,7 +22,7 @@ function App() {
       const file = e.target.file.files[0];
 
       const fileInfo = {
-        userId: '5e3a5dc7616eea001fd60dc9',
+        userId: '5e3bb3f14938bd001f5b34a5',
         case: 'document',
         fileName: file.name,
         fileType: file.type,
@@ -71,4 +71,4 @@ function App() {
   );
 }
 
-export default App;
+export default Playground;

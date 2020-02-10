@@ -15,28 +15,28 @@
   ],
   "cases": [
     {
-      "case": "document",
-      "mineTypes": ["text/plain", "application/pdf"],
+      "name": "document",
+      "mimes": ["text/plain", "application/pdf"],
       "minSize": 1024,
-      "maxSize": 102400
+      "maxSize": 10485760
     },
     {
-      "case": "thumbnail",
-      "mineTypes": ["image/png"],
+      "name": "thumbnail",
+      "mimes": ["image/png"],
       "minSize": 1024,
-      "maxSize": 10240
+      "maxSize": 31457280
     },
     {
-      "case": "picture",
-      "mineTypes": ["image/png", "image/jpeg"],
+      "name": "picture",
+      "mimes": ["image/png", "image/jpeg"],
       "minSize": 1024,
-      "maxSize": 10240
+      "maxSize": 10485760
     },
     {
-      "case": "video",
-      "mineTypes": ["audio/mpeg", "audio/ogg"],
-      "minSize": 2048,
-      "maxSize": 204800
+      "name": "video",
+      "mimes": ["audio/mpeg", "audio/ogg"],
+      "minSize": 1048576,
+      "maxSize": 104857600
     }
   ]
 }

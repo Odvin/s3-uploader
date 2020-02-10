@@ -2,7 +2,7 @@ import axios from 'axios';
 
 async function authFetch(url, options) {
   try {
-    const  {
+    const {
       method = 'get',
       data = {},
       params = {},
@@ -37,6 +37,7 @@ async function authFetch(url, options) {
     return response.data;
   } catch (error) {
     console.error(error);
+    return {};
   }
 }
 

@@ -21,11 +21,9 @@ const config = {
 };
 
 const mongoConfig = {
-  // connectionPath: `mongodb://${config.db.host}:27017/${config.db.database}`,
   connectionPath: `mongodb://${config.db.host}:27017,${config.db.replicaHost}:27017/${config.db.database}?replicaSet=rs0`,
   options: config.db.options
 };
-
 
 module.exports = {
   config,
