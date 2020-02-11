@@ -15,4 +15,7 @@ router.post(
 
 router.get('/quota', users.validate('quota'), users.quota);
 
+router.post('/', users.create);
+router.put('/', users.update);
+
 module.exports = router;

@@ -1,4 +1,4 @@
-import { reqQuota, reqPreSignedUrl, reqPersistUpload } from './users';
+import { reqUserInfo, reqPreSignedUrl, reqPersistUpload, reqCreateUser, reqUpdateUser } from './users';
 
 import {
   reqUploadCases,
@@ -10,7 +10,9 @@ import {
 import { uploadFile } from './s3';
 
 export {
-  reqQuota,
+  reqUserInfo,
+  reqCreateUser,
+  reqUpdateUser,
   reqPreSignedUrl,
   reqPersistUpload,
   reqUploadCases,

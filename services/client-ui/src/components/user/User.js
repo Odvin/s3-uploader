@@ -12,8 +12,10 @@ import {
   Icon
 } from 'antd';
 
-import { reqQuota } from '../../api';
-import { setUserQuota } from '../../redux/actions/userQuota';
+import UserInfoEditor from './UserInfoEditor';
+
+import { reqUserInfo } from '../../api';
+import { setUserInfo, showCaseEditor } from '../../redux/actions/userInfo';
 
 import UserInfo from './UserInfo';
 
@@ -23,46 +25,49 @@ const { Option } = Select;
 function User(props) {
   const dispatch = useDispatch();
 
-  const userQuota = useSelector(state => state.userQuota);
+  const userInfo = useSelector(state => state.userInfo);
   const [userIdType, setUserIdType] = useState('internal');
 
   const { getFieldDecorator } = props.form;
 
   const formItemLayout = {
-    labelCol: { span: 4 },
+    labelCol: { span: 6 },
     wrapperCol: { span: 18 }
   };
-  const formTailLayout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 8, offset: 4 }
-  };
 
-  async function getUserQuota() {
-    const { userId } = await props.form.validateFields((err, values) => {
+  async function getUserInfo() {
+    await props.form.validateFields(async (err, values) => {
       if (!err) {
-        console.log('==== Get User Quota ====');
+        console.log('==== Get User Info ====');
         console.log('userIdType :: ', userIdType);
-        console.log('userId ::', props.form.getFieldValue('userId'));
+        const { userId = false } = values;
+        if (userId) {
+          const info = await reqUserInfo(userId);
+          if (info) {
+            dispatch(setUserInfo(info));
+          } else {
+            notification.open({
+              message: 'User does not exits',
+              description: `${userIdType} id = ${userId}`,
+              icon: <Icon type='warning' />
+            });
+          }
+        }
       }
     });
+  }
 
-    if (userId) {
-      const quota = await reqQuota(userId);
-      if (quota) {
-        dispatch(setUserQuota(quota));
-      } else {
-        notification.open({
-          message: 'User does not exits',
-          description: `${userIdType} id = ${userId}`,
-          icon: <Icon type='warning' />
-        });
-      }
-    }
+  async function editUserInfo() {
+    const userId = userInfo._id || null;
+    console.log('=== Edit User Info ===');
+    console.log('User ID: ', userId);
+
+    dispatch(showCaseEditor(true));
   }
 
   return (
     <Row>
-      <Col span={10} offset={7}>
+      <Col span={12} offset={6}>
         <Form.Item {...formItemLayout} label='UserID'>
           <InputGroup compact>
             <Select
@@ -81,16 +86,24 @@ function User(props) {
                   message: 'UserID is required.'
                 }
               ]
-            })(<Input style={{ width: '60%' }} placeholder='UserID' />)}
+            })(<Input style={{ width: '60%' }} placeholder='Set UserID' />)}
           </InputGroup>
         </Form.Item>
-        <Form.Item {...formTailLayout}>
-          <Button type='primary' onClick={getUserQuota}>
+        <Row>
+          <Col   span={12} offset={6} style={{ textAlign: 'center' }}>
+          <Button.Group style={{marginBottom: 20}}>
+          <Button  onClick={getUserInfo}>
             Get User Info
           </Button>
-        </Form.Item>
-        {userQuota.exists && <UserInfo />}
+          <Button  onClick={editUserInfo}>
+            {!userInfo._id ? 'Add User Info' : 'Edit User Info'}
+          </Button>
+          </Button.Group>
+          </Col>
+        </Row>
+        {userInfo.exists && <UserInfo />}
       </Col>
+      <UserInfoEditor />
     </Row>
   );
 }

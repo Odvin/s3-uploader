@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-import { reqQuota, reqPreSignedUrl, reqPersistUpload, uploadFile } from '../../api';
+import { reqUserInfo, reqPreSignedUrl, reqPersistUpload, uploadFile } from '../../api';
 
 function Playground() {
   const [userQuota, setUserQuota] = useState(null);
 
   useEffect(() => {
     async function getUserQuota(userId) {
-      const quota = await reqQuota(userId);
+      const quota = await reqUserInfo(userId);
       console.log(quota);
       setUserQuota(quota);
     }

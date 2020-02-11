@@ -1,14 +1,19 @@
 const createError = require('http-errors');
 const { body, query, validationResult } = require('express-validator');
 
-const getUserQuota = require('./getUserQuota');
+const getUserInfo = require('./getUserInfo');
 const checkUserQuota = require('./checkUserQuota');
 const createPreSignedPostUrl = require('./createPreSignedPostUrl');
+const createUserInfo = require('./createUserInfo');
+const updateUserInfo = require('./updateUserInfo');
+
 const {
   setObjectCache,
   getObjectCache,
   clearObjectCache
 } = require('../../redis/objectCache');
+
+const { createUserValidation, updateUserValidation } = require('./validations');
 
 const { createUpload, persistUserUpload } = require('../../models/upload');
 
@@ -118,7 +123,7 @@ async function quota(req, res, next) {
 
     const { id: userId } = req.query;
 
-    const quota = await getUserQuota(userId);
+    const quota = await getUserInfo(userId);
 
     return res.json(quota);
   } catch (e) {
@@ -126,4 +131,55 @@ async function quota(req, res, next) {
   }
 }
 
-module.exports = { preSignedUrl, persistUpload, quota, validate };
+async function create(req, res, next) {
+  try {
+    const userInfo = req.body;
+   
+    const isValid = createUserValidation(userInfo);
+
+    if (!isValid) {
+      return next(
+        createError(422, 'Incorrect request for update creation', {
+          errors: createUserValidation.errors
+        })
+      );
+    }
+
+    const newUserInfo = await createUserInfo(userInfo);
+
+    return res.json(newUserInfo);
+  } catch (e) {
+    return next(e);
+  }
+}
+
+async function update(req, res, next) {
+  try {
+    const userInfo = req.body;
+   
+    const isValid = updateUserValidation(userInfo);
+
+    if (!isValid) {
+      return next(
+        createError(422, 'Incorrect request for update user info', {
+          errors: updateUserValidation.errors
+        })
+      );
+    }
+
+    const { isValidUserId, updatedUserInfo } = await updateUserInfo(
+      userInfo
+    );
+
+    if (!isValidUserId) {
+      return next(createError(422, 'Incorrect User ID'));
+    }
+
+    return res.json(updatedUserInfo);
+  } catch (e) {
+    return next(e);
+  }
+}
+
+
+module.exports = { preSignedUrl, persistUpload, quota, validate, create, update };

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Upload = require('./upload');
-const User   = require('../user/user');
+const Users   = require('../users/users');
 
 async function createUpload(upload) {
   const newUpload = new Upload(upload);
@@ -13,7 +13,7 @@ async function persistUserUpload(uploadInfo) {
     session.startTransaction();
 
 
-    const user = await User.findById(uploadInfo.userId).session(session);
+    const user = await Users.findById(uploadInfo.userId).session(session);
     user.storageUsage += uploadInfo.size;
 
     if (user.storageUsage > user.storageSize) {
