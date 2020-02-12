@@ -7,3 +7,7 @@ export const setUserInfo = info => {
 export const showCaseEditor = isVisible => {
   return { type: userInfo.consumeEditor, isVisible };
 };
+
+export const updateStorageUsage = storage => {
+  return { type: userInfo.updateStorageUsage, storage };
+};

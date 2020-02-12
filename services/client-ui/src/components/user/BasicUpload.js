@@ -1,22 +1,39 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Select } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { Select, notification, Icon } from 'antd';
 
-import { reqPreSignedUrl, reqPersistUpload, uploadFile } from '../../api';
+import {
+  reqPreSignedUrl,
+  reqPersistUpload,
+  uploadFile,
+  reqUserStorageUsage
+} from '../../api';
+import { updateStorageUsage } from '../../redux/actions/userInfo';
 
 function BasicUpload() {
+  const dispatch = useDispatch();
+
   const { _id: userId, cases } = useSelector(state => state.userInfo);
   const [uploadCaseName, setUploadCaseName] = useState(null);
 
   function getPossibleMimeTypes(cases, caseName) {
-    if (!caseName) return '';
+    if (!caseName) return {};
 
-    const [{ mimes = [] }] = (cases || []).filter(c => c.name === caseName);
+    const [activeCase] = (cases || []).filter(c => c.name === caseName);
 
-    return mimes.join(', ');
+    const { mimes, minSize, maxSize } = activeCase || {};
+
+    return {
+      accept: mimes.join(', '),
+      minSize,
+      maxSize
+    };
   }
 
-  const accept = getPossibleMimeTypes(cases, uploadCaseName);
+  const { accept = '', minSize, maxSize } = getPossibleMimeTypes(
+    cases,
+    uploadCaseName
+  );
 
   const userUploadCaseNames = (cases || []).map(c => (
     <Select.Option key={c.name}>{c.name}</Select.Option>
@@ -27,6 +44,16 @@ function BasicUpload() {
 
     if (e.target.file.files.length) {
       const file = e.target.file.files[0];
+
+      if (!(minSize && maxSize && minSize < file.size && file.size < maxSize)) {
+        notification.open({
+          message: 'Cannot upload the file',
+          description: `File size :: ${file.size} not in [${minSize}; ${maxSize}]`,
+          icon: <Icon type='warning' />
+        });
+
+        return;
+      }
 
       const fileInfo = {
         userId,
@@ -46,14 +73,17 @@ function BasicUpload() {
         key: uploadRes.key
       };
 
-      const persistRes = await reqPersistUpload(uploadInfo);
+      const { completed } = await reqPersistUpload(uploadInfo);
 
-      console.log(persistRes);
+      if (completed) {
+        const storage = await reqUserStorageUsage(userId);
+        dispatch(updateStorageUsage(storage));
+      }
     }
   }
 
   return (
-    <div style={{marginTop: 20}}>
+    <div style={{ marginTop: 20 }}>
       <Select
         style={{ width: '220px' }}
         placeholder='Select Upload Cases'
@@ -63,7 +93,7 @@ function BasicUpload() {
       </Select>
 
       {uploadCaseName && (
-        <div style={{marginTop: 20}}>
+        <div style={{ marginTop: 20 }}>
           <p>
             <strong>Basic Upload: Choose file to upload</strong>
           </p>

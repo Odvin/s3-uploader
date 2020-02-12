@@ -11,6 +11,12 @@ export default (state = initialState, action) => {
       return { ...state, ...action.info, exists: true };
     case userInfo.consumeEditor:
       return { ...state, isEditorVisible: action.isVisible };
+    case userInfo.updateStorageUsage:
+      return {
+        ...state,
+        storageUsage: action.storage.storageUsage,
+        storageSize: action.storage.storageSize
+      };
     default:
       return state;
   }

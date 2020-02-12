@@ -1,6 +1,7 @@
 export const userInfo = {
   set: 'USER_INFO_SET',
   consumeEditor: 'USER_INFO_EDITOR',
+  updateStorageUsage: 'USER_INFO_UPDATE_STORAGE'
 };
 
 export const userQuota = {

@@ -43,10 +43,25 @@ const seedUser = async users => {
   return 'Users seeding is done.';
 };
 
+async function userStorageUsage (userId) {
+  const result = { isValidUserId: false, storage: {} };
+
+  if (mongoose.Types.ObjectId.isValid(userId)) {
+    const { storageUsage, storageSize } = await Users.findById(userId, 'storageUsage storageSize', { lean: true }).limit(1);
+
+    result.isValidUserId = true;
+    result.storage.storageUsage = storageUsage;
+    result.storage.storageSize = storageSize;
+  }
+
+  return result;
+}
+
 module.exports = {
   createUser,
   updateUser,
   isUserExists,
+  userStorageUsage,
   findUserById,
   userInfo,
   seedUser

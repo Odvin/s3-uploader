@@ -1,17 +1,19 @@
 const {
   createUser,
+  updateUser,
+  isUserExists,
   findUserById,
   seedUser,
   userInfo,
-  updateUser,
-  isUserExists
+  userStorageUsage
 } = require('./operations');
 
 module.exports = {
+  seedUser,
   createUser,
   updateUser,
   isUserExists,
   findUserById,
   userInfo,
-  seedUser
+  userStorageUsage
 };

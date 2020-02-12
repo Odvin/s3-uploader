@@ -1,4 +1,11 @@
-import { reqUserInfo, reqPreSignedUrl, reqPersistUpload, reqCreateUser, reqUpdateUser } from './users';
+import {
+  reqUserInfo,
+  reqPreSignedUrl,
+  reqPersistUpload,
+  reqCreateUser,
+  reqUpdateUser,
+  reqUserStorageUsage
+} from './users';
 
 import {
   reqUploadCases,
@@ -19,5 +26,6 @@ export {
   reqUpdateUploadCase,
   reqCreateUploadCase,
   reqRemoveUploadCase,
-  uploadFile
+  uploadFile,
+  reqUserStorageUsage
 };

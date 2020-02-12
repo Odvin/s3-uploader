@@ -6,6 +6,7 @@ const checkUserQuota = require('./checkUserQuota');
 const createPreSignedPostUrl = require('./createPreSignedPostUrl');
 const createUserInfo = require('./createUserInfo');
 const updateUserInfo = require('./updateUserInfo');
+const getUserStorageUsage = require('./getUserStorageUsage');
 
 const {
   setObjectCache,
@@ -74,7 +75,7 @@ async function preSignedUrl(req, res, next) {
 async function persistUpload(req, res, next) {
   try {
     const errors = validationResult(req);
-
+    storageUsage
     if (!errors.isEmpty())
       return next(
         createError(422, 'Incorrect request for the persist file upload', {
@@ -104,7 +105,7 @@ async function persistUpload(req, res, next) {
 
     clearObjectCache(uploadId);
 
-    return res.json({ result: 'Ok' });
+    return res.json({ completed: true });
   } catch (e) {
     return next(e);
   }
@@ -134,7 +135,7 @@ async function quota(req, res, next) {
 async function create(req, res, next) {
   try {
     const userInfo = req.body;
-   
+
     const isValid = createUserValidation(userInfo);
 
     if (!isValid) {
@@ -156,7 +157,7 @@ async function create(req, res, next) {
 async function update(req, res, next) {
   try {
     const userInfo = req.body;
-   
+
     const isValid = updateUserValidation(userInfo);
 
     if (!isValid) {
@@ -167,9 +168,7 @@ async function update(req, res, next) {
       );
     }
 
-    const { isValidUserId, updatedUserInfo } = await updateUserInfo(
-      userInfo
-    );
+    const { isValidUserId, updatedUserInfo } = await updateUserInfo(userInfo);
 
     if (!isValidUserId) {
       return next(createError(422, 'Incorrect User ID'));
@@ -181,5 +180,27 @@ async function update(req, res, next) {
   }
 }
 
+async function storageUsage(req, res, next) {
+  try {
+    const { userId } = req.params;
+    const { isValidUserId, storage } = await getUserStorageUsage(userId);
 
-module.exports = { preSignedUrl, persistUpload, quota, validate, create, update };
+    if (!isValidUserId) {
+      return next(createError(422, 'Incorrect User ID'));
+    }
+
+    return res.json(storage);
+  } catch (e) {
+    return next(e);
+  }
+}
+
+module.exports = {
+  preSignedUrl,
+  persistUpload,
+  quota,
+  validate,
+  create,
+  update,
+  storageUsage
+};
