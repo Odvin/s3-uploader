@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Uploads = require('./uploads');
-const Users   = require('../users/users');
+const Users = require('../users/users');
 
 async function createUpload(upload) {
   const newUpload = new Uploads(upload);
@@ -12,7 +12,6 @@ async function persistUserUpload(uploadInfo) {
   try {
     session.startTransaction();
 
-
     const user = await Users.findById(uploadInfo.userId).session(session);
     user.storageUsage += uploadInfo.size;
 
@@ -21,7 +20,7 @@ async function persistUserUpload(uploadInfo) {
     }
 
     await user.save();
-    
+
     await Uploads.create([uploadInfo], { session });
 
     await session.commitTransaction();
@@ -42,6 +41,19 @@ async function seedUpload(uploads) {
   await Uploads.insertMany(uploads);
 }
 
+async function userUploads(userId) {
+  const result = { isValidUserId: false, uploads: {} };
+
+  if (mongoose.Types.ObjectId.isValid(userId)) {
+    result.uploads = await Uploads.find({ userId }, null, { lean: true }).limit(
+      20
+    );
+    result.isValidUserId = true;
+  }
+
+  return result;
+}
+
 function createUploadId() {
   return mongoose.Types.ObjectId();
 }
@@ -51,5 +63,6 @@ module.exports = {
   findUploadById,
   createUploadId,
   persistUserUpload,
-  seedUpload
+  seedUpload,
+  userUploads
 };
