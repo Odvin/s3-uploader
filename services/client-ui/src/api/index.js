@@ -1,4 +1,11 @@
-import { reqQuota, reqPreSignedUrl, reqPersistUpload } from './users';
+import {
+  reqUserInfo,
+  reqPreSignedUrl,
+  reqPersistUpload,
+  reqCreateUser,
+  reqUpdateUser,
+  reqUserStorageUsage
+} from './users';
 
 import {
   reqUploadCases,
@@ -10,12 +17,15 @@ import {
 import { uploadFile } from './s3';
 
 export {
-  reqQuota,
+  reqUserInfo,
+  reqCreateUser,
+  reqUpdateUser,
   reqPreSignedUrl,
   reqPersistUpload,
   reqUploadCases,
   reqUpdateUploadCase,
   reqCreateUploadCase,
   reqRemoveUploadCase,
-  uploadFile
+  uploadFile,
+  reqUserStorageUsage
 };

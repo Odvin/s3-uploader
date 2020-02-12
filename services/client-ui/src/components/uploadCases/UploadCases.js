@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { List, Icon, Button, notification } from 'antd';
 
 import UploadCasesEditor from './UploadCaseEditor';
 
-import { reqUploadCases, reqRemoveUploadCase } from '../../api';
+import { reqRemoveUploadCase } from '../../api';
 
 import {
-  setUploadCases,
   consumeUploadCaseEditor,
   selectUploadCaseId,
   removeUploadCase
@@ -51,18 +50,7 @@ function Cases(props) {
 
 function UploadCases(props) {
   const dispatch = useDispatch();
-  const { cases = [], loaded } = useSelector(state => state.uploadCases);
-
-  useEffect(() => {
-    async function getUploadCases() {
-      const cases = await reqUploadCases();
-      dispatch(setUploadCases(cases));
-    }
-
-    if (!loaded) {
-      getUploadCases();
-    }
-  }, []);
+  const { cases = [] } = useSelector(state => state.uploadCases);
 
   function editCase(caseId) {
     dispatch(consumeUploadCaseEditor(true));

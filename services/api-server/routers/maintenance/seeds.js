@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const { seedCases, getAllCasesIds } = require('../../models/cases');
-const { seedUser } = require('../../models/user');
+const { seedUser } = require('../../models/users');
 const Upload = require('../../models/upload/upload');
 
 const { users, cases } = require('../../models/seeds.json');

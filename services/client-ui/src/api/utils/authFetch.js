@@ -32,9 +32,9 @@ async function authFetch(url, options) {
 
     console.log(config);
 
-    const response = await axios(config);
+    const { data: responseData = {} } = await axios(config);
 
-    return response.data;
+    return responseData;
   } catch (error) {
     console.error(error);
     return {};

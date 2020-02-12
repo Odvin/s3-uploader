@@ -1,4 +1,4 @@
-const { userQuotas } = require('../../models/user');
+const { userInfo } = require('../../models/users');
 const { createUploadId } = require('../../models/upload');
 
 module.exports = async function checkUserQuota(fileInfo) {
@@ -6,7 +6,7 @@ module.exports = async function checkUserQuota(fileInfo) {
     acceptable: false
   };
 
-  const user = await userQuotas(fileInfo.userId);
+  const user = await userInfo(fileInfo.userId);
 
   const [uploadCase] = user.cases.filter(
     upload => upload.name === fileInfo.case

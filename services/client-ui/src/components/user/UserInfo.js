@@ -1,27 +1,23 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col, Statistic, Button } from 'antd';
+import { useSelector } from 'react-redux';
+import { Row, Col, Statistic, Divider } from 'antd';
 
-import UploadCases from './UploadCases';
-import CaseEditor from './CaseEditor';
+import UserUploads from './UserUploads';
 
-import { showCaseEditor, selectUseCaseId } from '../../redux/actions/userQuota';
 
 function UserStatistics() {
-  const dispatch = useDispatch();
-
   const { _id, extId, reseller, storageUsage, storageSize } = useSelector(
-    state => state.userQuota
+    state => state.userInfo
   );
+
   
-  function editCase(caseId) {
-    dispatch(showCaseEditor(true));
-    dispatch(selectUseCaseId(caseId));
-  }
+  
+  const MBSize = 1024 * 1024;
 
   return (
     <div>
-      <Row gutter={16}>
+      <Divider>User Info </Divider>
+      <Row gutter={14}>
         <Col span={15}>
           <Statistic title='Internal UserID' value={_id} />
           <Statistic title='External UserID' value={extId} />
@@ -30,17 +26,13 @@ function UserStatistics() {
           <Statistic title='User Reseller' value={reseller} />
           <Statistic
             title='Storage Usage / Size'
-            value={`${storageUsage} / ${storageSize}`}
+            value={`${storageUsage} / ${Math.floor(storageSize/MBSize)}Mb`}
           />
         </Col>
       </Row>
-      <UploadCases editCase={editCase} />
-
-      <Button block icon='file-add' onClick={() => editCase(null)}>
-        Add New Case
-      </Button>
-
-      <CaseEditor />
+      <Divider />
+      
+      <UserUploads />
     </div>
   );
 }
