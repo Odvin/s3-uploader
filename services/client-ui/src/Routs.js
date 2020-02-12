@@ -3,7 +3,6 @@ import { Route } from 'react-router-dom';
 import { Layout } from 'antd';
 
 import Dashboard from './components/dashboard/Dashboard';
-import Playground from './components/playground/Playground';
 import User from './components/user/User';
 import UploadCases from './components/uploadCases/UploadCases';
 
@@ -22,7 +21,6 @@ function Routs() {
       <Route path='/' component={Dashboard} exact />
       <Route path='/upload-cases' component={UploadCases} exact />
       <Route path='/user' component={User} exact />
-      <Route path='/playground' component={Playground} exact />
     </Content>
   );
 }

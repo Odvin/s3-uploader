@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Row, Col, Statistic, Divider } from 'antd';
 
-import UserUploadCases from './UserUploadCases';
+import UserUploads from './UserUploads';
 
 
 function UserStatistics() {
@@ -17,7 +17,6 @@ function UserStatistics() {
   return (
     <div>
       <Divider>User Info </Divider>
-
       <Row gutter={14}>
         <Col span={15}>
           <Statistic title='Internal UserID' value={_id} />
@@ -31,12 +30,9 @@ function UserStatistics() {
           />
         </Col>
       </Row>
-
-      <Divider>Upload Cases</Divider>
-
-      <UserUploadCases />
-
-     
+      <Divider />
+      
+      <UserUploads />
     </div>
   );
 }

@@ -48,23 +48,6 @@ function Navigation() {
             </Link>
           </Menu.Item>
         </SubMenu>
-
-        <SubMenu
-          key='playground'
-          title={
-            <span>
-              <Icon type='issues-close' />
-              Playground
-            </span>
-          }
-        >
-          <Menu.Item key='fileUpload'>
-            <Link to='/playground'>
-              <Icon type='cloud-upload' />
-              <span className='nav-text'>File Upload</span>
-            </Link>
-          </Menu.Item>
-        </SubMenu>
       </Menu>
     </Sider>
   );
