@@ -1,5 +1,5 @@
 const { userInfo } = require('../../models/users');
-const { createUploadId } = require('../../models/upload');
+const { createUploadId } = require('../../models/uploads');
 
 module.exports = async function checkUserQuota(fileInfo) {
   const upload = {

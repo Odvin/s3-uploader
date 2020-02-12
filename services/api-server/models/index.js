@@ -6,7 +6,7 @@ const {
 
 
 const user = require('./users');
-const upload = require('./upload');
+const upload = require('./uploads');
 
 mongoose.connect(connectionPath, options);
 

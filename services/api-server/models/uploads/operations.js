@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const Upload = require('./upload');
+const Uploads = require('./uploads');
 const Users   = require('../users/users');
 
 async function createUpload(upload) {
-  const newUpload = new Upload(upload);
+  const newUpload = new Uploads(upload);
   return newUpload.save();
 }
 
@@ -22,7 +22,7 @@ async function persistUserUpload(uploadInfo) {
 
     await user.save();
     
-    await Upload.create([uploadInfo], { session });
+    await Uploads.create([uploadInfo], { session });
 
     await session.commitTransaction();
   } catch (error) {
@@ -34,12 +34,12 @@ async function persistUserUpload(uploadInfo) {
 }
 
 async function findUploadById(uploadId) {
-  return Upload.findById(uploadId, null, { lean: true }) || {};
+  return Uploads.findById(uploadId, null, { lean: true }) || {};
 }
 
 async function seedUpload(uploads) {
-  await Upload.deleteMany({});
-  await Upload.insertMany(uploads);
+  await Uploads.deleteMany({});
+  await Uploads.insertMany(uploads);
 }
 
 function createUploadId() {

@@ -16,7 +16,7 @@ const {
 
 const { createUserValidation, updateUserValidation } = require('./validations');
 
-const { createUpload, persistUserUpload } = require('../../models/upload');
+const { createUpload, persistUserUpload } = require('../../models/uploads');
 
 function validate(method) {
   switch (method) {

@@ -21,7 +21,7 @@ function BasicUpload() {
 
     const [activeCase] = (cases || []).filter(c => c.name === caseName);
 
-    const { mimes, minSize, maxSize } = activeCase || {};
+    const { mimes = [], minSize, maxSize } = activeCase || {};
 
     return {
       accept: mimes.join(', '),

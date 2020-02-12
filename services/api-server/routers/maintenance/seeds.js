@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const { seedCases, getAllCasesIds } = require('../../models/cases');
 const { seedUser } = require('../../models/users');
-const Upload = require('../../models/upload/upload');
+const Uploads = require('../../models/uploads/uploads');
 
 const { users, cases } = require('../../models/seeds.json');
 
@@ -19,7 +19,7 @@ router.get('/', async (req, res, next) => {
 
     const seedingResult = await seedUser(preparedUses);
 
-    await Upload.createCollection();
+    await Uploads.createCollection();
 
     return res.send(seedingResult);
   } catch (e) {
