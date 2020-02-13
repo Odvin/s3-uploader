@@ -1,4 +1,6 @@
 const router = require('express').Router();
 const { uploads } = require('../../controllers');
 
-router.get('/list', uploads.list);
+router.get('/list/:userId', uploads.list);
+
+module.exports = router;

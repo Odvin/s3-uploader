@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { List, Tabs } from 'antd';
 
 import BasicUpload from './BasicUpload';
+import CompletedUploads from './CompletedUploads';
 
 function Cases() {
   const { cases = [] } = useSelector(state => state.userInfo);
@@ -36,7 +37,7 @@ function UserUploads() {
         <BasicUpload />
       </Tabs.TabPane>
       <Tabs.TabPane tab='Uploads' key='uploads'>
-        Content of Tab Pane 3
+        <CompletedUploads />
       </Tabs.TabPane>
     </Tabs>
   );

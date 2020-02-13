@@ -14,6 +14,10 @@ import {
   reqRemoveUploadCase
 } from './cases';
 
+import {
+  reqUserUploads
+} from './uploads'
+
 import { uploadFile } from './s3';
 
 export {
@@ -27,5 +31,6 @@ export {
   reqCreateUploadCase,
   reqRemoveUploadCase,
   uploadFile,
-  reqUserStorageUsage
+  reqUserStorageUsage,
+  reqUserUploads
 };

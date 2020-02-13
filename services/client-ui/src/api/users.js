@@ -37,7 +37,10 @@ export const reqPersistUpload = uploadInfo =>
     data: uploadInfo
   });
 
-  export const reqUserStorageUsage = userId =>
-  authFetch(`${AUTH_API_SERVICE}/${API_VERSION}/users/storage-usage/${userId}`, {
-    auth: false,
-  });
+export const reqUserStorageUsage = userId =>
+  authFetch(
+    `${AUTH_API_SERVICE}/${API_VERSION}/users/storage-usage/${userId}`,
+    {
+      auth: false
+    }
+  );
