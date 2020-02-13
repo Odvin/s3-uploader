@@ -139,24 +139,9 @@ function BasicUpload() {
     }
   }
 
+
   async function thumb(e) {
     e.preventDefault();
-
-    function base64MimeType(encoded) {
-      let result = null;
-
-      if (typeof encoded !== 'string') {
-        return result;
-      }
-
-      const mime = encoded.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
-
-      if (mime && mime.length) {
-        result = mime[1];
-      }
-
-      return result;
-    }
 
     const files = e.target.file.files;
     if (files == null || files == undefined) {
@@ -175,8 +160,8 @@ function BasicUpload() {
       const reader = new FileReader();
 
       if (reader != null) {
-        reader.onload = GetThumbnail;
         reader.readAsDataURL(file);
+        reader.onload = GetThumbnail;
 
         if (!reader.error) {
           const fileOptions = {
@@ -186,24 +171,7 @@ function BasicUpload() {
             userId
           };
 
-          const result = await processFileUpload(file, fileOptions);
-
-          if (result.completed) {
-            const thumbnailOptions = {
-              minSize: thumbnailUploadOptions.minSize,
-              maxSize: thumbnailUploadOptions.maxSize,
-              uploadCaseName: 'thumbnail',
-              userId
-            };
-
-            const thumbnailFile = new File(
-              [reader.result],
-              `thumbnail-300x200-${file.name}`,
-              { type: base64MimeType(reader.result) }
-            );
-           
-            processFileUpload(thumbnailFile, thumbnailOptions);
-          }
+          processFileUpload(file, fileOptions);
         }
       }
     }
@@ -241,6 +209,25 @@ function BasicUpload() {
           nImg.src = dataURL;
           const uploadForm = document.getElementById('uploadPicture');
           uploadForm.appendChild(nImg);
+
+          const thumbnailOptions = {
+            minSize: thumbnailUploadOptions.minSize,
+            maxSize: thumbnailUploadOptions.maxSize,
+            uploadCaseName: 'thumbnail',
+            userId
+          };
+
+          const i = dataURL.indexOf('base64,');
+          const buffer = Buffer.from(dataURL.slice(i + 7), 'base64');
+
+          const thumbnailFile = new File(
+            [buffer],
+            'thumb-300x200.png',
+            { type: 'image/png'}
+          );
+         
+          processFileUpload(thumbnailFile, thumbnailOptions);
+
         } else alert('unable to get context');
       }
     };
