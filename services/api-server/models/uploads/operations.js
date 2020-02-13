@@ -47,7 +47,8 @@ async function userUploads(userId) {
   if (mongoose.Types.ObjectId.isValid(userId)) {
     result.uploads = await Uploads.find({ userId }, null, { lean: true }).limit(
       20
-    );
+    ).sort({_id:-1});
+    
     result.isValidUserId = true;
   }
 
