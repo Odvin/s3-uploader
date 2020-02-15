@@ -1,16 +1,14 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Layout, Breadcrumb, Menu } from 'antd';
+import { Layout, Breadcrumb, Menu, notification, Icon } from 'antd';
 
 import Routs from '../../Routs';
 import Navigation from './Navigation';
 
 import { reqUploadCases } from '../../api';
 
-import {
-  setUploadCases,
-} from '../../redux/actions/uploadCases';
+import { setUploadCases } from '../../redux/actions/uploadCases';
 
 import './skeleton.scss';
 
@@ -18,9 +16,7 @@ const { Header } = Layout;
 
 // Init store
 
-
 function Skeleton() {
-  
   // ==== Init Store ====
   const dispatch = useDispatch();
   const { loaded } = useSelector(state => state.uploadCases);
@@ -28,7 +24,15 @@ function Skeleton() {
   useEffect(() => {
     async function getUploadCases() {
       const cases = await reqUploadCases();
-      dispatch(setUploadCases(cases));
+      if (!cases.reFailed) {
+        dispatch(setUploadCases(cases));
+      } else {
+        notification.open({
+          message: 'Cannot get Upload Cases',
+          description: 'S3-Uploads Initialization',
+          icon: <Icon type='warning' />
+        });
+      }
     }
 
     if (!loaded) {

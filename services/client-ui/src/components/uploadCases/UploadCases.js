@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { List, Icon, Button, notification } from 'antd';
+import { List, Icon, Button, notification, Modal } from 'antd';
 
-import UploadCasesEditor from './UploadCaseEditor';
+import UploadCaseForm from './UploadCaseForm';
 
 import { reqRemoveUploadCase } from '../../api';
 
-import {
-  consumeUploadCaseEditor,
-  selectUploadCaseId,
-  removeUploadCase
-} from '../../redux/actions/uploadCases';
+import { removeUploadCase } from '../../redux/actions/uploadCases';
+
+const MBSize = 1024 * 1024;
 
 function Cases(props) {
   const { cases, editCase, removeCase } = props;
@@ -39,7 +37,9 @@ function Cases(props) {
         >
           <List.Item.Meta
             title={item.name}
-            description={`min: ${item.minSize}; max: ${item.maxSize} (bits)`}
+            description={`min: ${Math.floor(
+              item.minSize / MBSize
+            )} Mb; max: ${Math.floor(item.maxSize / MBSize)} Mb`}
           />
           {(item.mimes || []).join(';  ')}
         </List.Item>
@@ -52,9 +52,17 @@ function UploadCases(props) {
   const dispatch = useDispatch();
   const { cases = [] } = useSelector(state => state.uploadCases);
 
+  const [isEditorVisible, setIsEditorVisible] = useState(false);
+  const [activeUploadCaseId, setActiveUploadCaseId] = useState(null);
+
   function editCase(caseId) {
-    dispatch(consumeUploadCaseEditor(true));
-    dispatch(selectUploadCaseId(caseId));
+    setActiveUploadCaseId(caseId);
+    setIsEditorVisible(true);
+  }
+
+  function closeUploadCaseEditor() {
+    setActiveUploadCaseId(null);
+    setIsEditorVisible(false);
   }
 
   async function removeCase(caseId) {
@@ -70,13 +78,36 @@ function UploadCases(props) {
     }
   }
 
+  const activeUploadCase = activeUploadCaseId
+    ? cases.find(c => c._id === activeUploadCaseId)
+    : {
+        _id: null,
+        name: null,
+        mimes: [],
+        minSize: 1048576,
+        maxSize: 10485760
+      };
+
   return (
     <>
       <Cases cases={cases} editCase={editCase} removeCase={removeCase} />
       <Button block icon='file-add' onClick={() => editCase(null)}>
         Add New Upload Case
       </Button>
-      <UploadCasesEditor />
+
+      <Modal
+        visible={isEditorVisible}
+        title='Upload Case Editor'
+        onCancel={closeUploadCaseEditor}
+        footer={null}
+      >
+        {isEditorVisible && (
+          <UploadCaseForm
+            activeUploadCase={activeUploadCase}
+            closeUploadCaseEditor={closeUploadCaseEditor}
+          />
+        )}
+      </Modal>
     </>
   );
 }

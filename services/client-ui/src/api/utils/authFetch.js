@@ -30,14 +30,12 @@ async function authFetch(url, options) {
       };
     }
 
-    console.log(config);
+    const { data: resData } = await axios(config);
 
-    const { data: responseData = {} } = await axios(config);
-
-    return responseData;
+    return resData;
   } catch (error) {
     console.error(error);
-    return {};
+    return { reqFailed: true };
   }
 }
 

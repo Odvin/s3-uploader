@@ -8,10 +8,6 @@ export const consumeUploadCaseEditor = isVisible => {
   return { type: uploadCases.consumeEditor, isVisible };
 };
 
-export const selectUploadCaseId = caseId => {
-  return { type: uploadCases.selectId, caseId };
-};
-
 export const addUploadCase = uploadCase => {
   return { type: uploadCases.add, uploadCase };
 };

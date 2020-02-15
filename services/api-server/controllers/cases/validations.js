@@ -6,8 +6,8 @@ const createUploadCaseSchema = {
   require: ['name', 'minSize', 'maxSize', 'mimes'],
   properties: {
     name: { type: 'string' },
-    minSize: { type: 'number', minimum: 1024, maximum: 1048576 },
-    maxSize: { type: 'number', minimum: 2097152, maximum: 104857600 },
+    minSize: { type: 'number', minimum: 1048576, maximum: 5242880 },
+    maxSize: { type: 'number', minimum: 5242880, maximum: 104857600 },
     mimes: {
       type: 'array',
       uniqueItems: true,
