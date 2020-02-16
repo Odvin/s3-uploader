@@ -10,6 +10,8 @@ import {
   updateUploadCase
 } from '../../redux/actions/uploadCases';
 
+const { Option } = Select;
+
 function UploadCaseForm(props) {
   const dispatch = useDispatch();
 
@@ -19,6 +21,8 @@ function UploadCaseForm(props) {
   const { cases } = useSelector(state => state.uploadCases);
 
   const [processCaseUpdate, setProcessCaseUpdate] = useState(false);
+  const [minSizeMode, setMinSizeMode] = useState(1024);
+  const [maxSizeMode, setMaxSizeMode] = useState(1024 * 1024);
 
   async function editUploadCase(e) {
     e.preventDefault();
@@ -27,17 +31,29 @@ function UploadCaseForm(props) {
       if (!err) {
         const uploadCase = {
           name: values.name,
-          minSize: values.limits[0],
-          maxSize: values.limits[1],
+          minSize: values.minSize * minSizeMode,
+          maxSize: values.maxSize * maxSizeMode,
           mimes: values.mimes
         };
+
+        if (uploadCase.minSize >= uploadCase.maxSize) {
+          notification.open({
+            message: 'Cannot update the case',
+            description: `Min size is bigger than Max`,
+            icon: <Icon type='warning' />
+          });
+          return;
+        }
 
         setProcessCaseUpdate(true);
 
         if (activeUploadCase._id) {
           uploadCase.caseId = activeUploadCase._id;
-          const updatedUploadCase = await reqUpdateUploadCase(uploadCase);
-          if (!updateUploadCase.reqFailed) {
+          const {
+            resData: updatedUploadCase,
+            reqFailed
+          } = await reqUpdateUploadCase(uploadCase);
+          if (!reqFailed) {
             dispatch(updateUploadCase(updatedUploadCase));
           } else {
             notification.open({
@@ -47,8 +63,11 @@ function UploadCaseForm(props) {
             });
           }
         } else {
-          const newUploadCase = await reqCreateUploadCase(uploadCase);
-          if (!newUploadCase.reqFailed) {
+          const {
+            resData: newUploadCase,
+            reqFailed
+          } = await reqCreateUploadCase(uploadCase);
+          if (!reqFailed) {
             dispatch(addUploadCase(newUploadCase));
           } else {
             notification.open({
@@ -75,30 +94,15 @@ function UploadCaseForm(props) {
     }
   }
 
-  const marks = {
-    1048576: {
-      label: <strong>1 Mb</strong>
-    },
-    20971520: {
-      label: <strong>20 Mb</strong>
-    },
-    52428800: {
-      label: <strong>50 Mb</strong>
-    },
-    104857600: {
-      label: <strong>100</strong>
-    }
-  };
-
   const fileMineTypes = [
-    <Select.Option key='text/plain'>'text/plain'</Select.Option>,
-    <Select.Option key='text/html'>'text/html'</Select.Option>,
-    <Select.Option key='text/javascript'>'text/javascript'</Select.Option>,
-    <Select.Option key='text/css'>'text/css'</Select.Option>,
-    <Select.Option key='image/jpeg'>'image/jpeg'</Select.Option>,
-    <Select.Option key='image/png'>'image/png'</Select.Option>,
-    <Select.Option key='audio/mpeg'>'audio/mpeg'</Select.Option>,
-    <Select.Option key='audio/ogg'>'audio/ogg'</Select.Option>
+    <Option key='text/plain'>'text/plain'</Option>,
+    <Option key='text/html'>'text/html'</Option>,
+    <Option key='text/javascript'>'text/javascript'</Option>,
+    <Option key='text/css'>'text/css'</Option>,
+    <Option key='image/jpeg'>'image/jpeg'</Option>,
+    <Option key='image/png'>'image/png'</Option>,
+    <Option key='audio/mpeg'>'audio/mpeg'</Option>,
+    <Option key='audio/ogg'>'audio/ogg'</Option>
   ];
 
   const formItemLayout = {
@@ -106,10 +110,27 @@ function UploadCaseForm(props) {
     wrapperCol: { span: 20 }
   };
 
-  function formatter(value) {
-    const sizeInMb = Math.floor(value / 1048576);
-    return `${sizeInMb} Mb`;
-  }
+  const minSizeModeSelector = (
+    <Select
+      defaultValue={activeUploadCase.minSize > 1048576 ? '1048576' : '1024'}
+      style={{ width: 100 }}
+      onChange={value => setMinSizeMode(value)}
+    >
+      <Option value='1048576'>Mb</Option>
+      <Option value='1024'>Kb</Option>
+    </Select>
+  );
+
+  const maxSizeModeSelector = (
+    <Select
+      defaultValue={activeUploadCase.maxSize > 1048576 ? '1048576' : '1024'}
+      style={{ width: 100 }}
+      onChange={value => setMaxSizeMode(value)}
+    >
+      <Option value='1048576'>Mb</Option>
+      <Option value='1024'>Kb</Option>
+    </Select>
+  );
 
   return (
     <Form {...formItemLayout} onSubmit={editUploadCase}>
@@ -124,20 +145,36 @@ function UploadCaseForm(props) {
           ]
         })(<Input placeholder='Upload Case Name' />)}
       </Form.Item>
-      <Form.Item label='Limits'>
-        {getFieldDecorator('limits', {
-          initialValue: [activeUploadCase.minSize, activeUploadCase.maxSize]
+
+      <Form.Item label='Min'>
+        {getFieldDecorator('minSize', {
+          initialValue:
+            activeUploadCase.minSize > 1048576
+              ? Math.floor(activeUploadCase.minSize / 1048576)
+              : Math.floor(activeUploadCase.minSize / 1024),
+          rules: [{ required: true, message: 'Please input min file size' }]
         })(
-          <Slider
-            range
-            marks={marks}
-            tipFormatter={formatter}
-            min={1048576}
-            max={104857600}
-            step={1048576}
+          <Input
+            placeholder='Min file size for upload case'
+            addonAfter={minSizeModeSelector}
           />
         )}
       </Form.Item>
+      <Form.Item label='Max'>
+        {getFieldDecorator('maxSize', {
+          initialValue:
+            activeUploadCase.maxSize > 1048576
+              ? Math.floor(activeUploadCase.maxSize / 1048576)
+              : Math.floor(activeUploadCase.maxSize / 1024),
+          rules: [{ required: true, message: 'Please input max file size' }]
+        })(
+          <Input
+            placeholder='Max file size for upload case'
+            addonAfter={maxSizeModeSelector}
+          />
+        )}
+      </Form.Item>
+
       <Form.Item label='Mimes'>
         {getFieldDecorator('mimes', {
           initialValue: activeUploadCase.mimes,

@@ -11,6 +11,18 @@ import { removeUploadCase } from '../../redux/actions/uploadCases';
 
 const MBSize = 1024 * 1024;
 
+const filesSizeDescription = (minSize, maxSize) => {
+  const minSizeDesc =
+    minSize > MBSize
+      ? `${Math.floor(minSize / MBSize)} Mb`
+      : `${Math.floor(minSize / 1024)} Kb`;
+  const maxSizeDesc =
+    maxSize > MBSize
+      ? `${Math.floor(maxSize / MBSize)} Mb`
+      : `${Math.floor(minSize / 1024)} Kb`;
+  return `${minSizeDesc}; ${maxSizeDesc}`;
+};
+
 function Cases(props) {
   const { cases, editCase, removeCase } = props;
 
@@ -37,9 +49,7 @@ function Cases(props) {
         >
           <List.Item.Meta
             title={item.name}
-            description={`min: ${Math.floor(
-              item.minSize / MBSize
-            )} Mb; max: ${Math.floor(item.maxSize / MBSize)} Mb`}
+            description={filesSizeDescription(item.minSize, item.maxSize)}
           />
           {(item.mimes || []).join(';  ')}
         </List.Item>
@@ -66,8 +76,8 @@ function UploadCases(props) {
   }
 
   async function removeCase(caseId) {
-    const { wasRemoved = false } = await reqRemoveUploadCase(caseId);
-    if (wasRemoved) {
+    const { resData, reqFailed } = await reqRemoveUploadCase(caseId);
+    if (!reqFailed && resData.wasRemoved) {
       dispatch(removeUploadCase(caseId));
     } else {
       notification.open({

@@ -17,19 +17,19 @@
     {
       "name": "document",
       "mimes": ["text/plain", "application/pdf"],
-      "minSize": 1024,
+      "minSize": 1048576,
       "maxSize": 10485760
     },
     {
       "name": "thumbnail",
       "mimes": ["image/png"],
-      "minSize": 1024,
+      "minSize": 1048576,
       "maxSize": 31457280
     },
     {
       "name": "picture",
       "mimes": ["image/png", "image/jpeg"],
-      "minSize": 1024,
+      "minSize": 1048576,
       "maxSize": 10485760
     },
     {

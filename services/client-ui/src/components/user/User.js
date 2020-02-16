@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useHistory } from 'react-router-dom';
 
 import {
   Row,
@@ -24,6 +25,29 @@ const { Option } = Select;
 
 function User(props) {
   const dispatch = useDispatch();
+  let history = useHistory();
+  const { userId } = useParams();
+
+  useEffect(() => {
+    async function getUseInfoByRouterParam(userId) {
+      if (userId) {
+        const { resData: info, reqFailed } = await reqUserInfo(userId);
+        if (!reqFailed) {
+          dispatch(setUserInfo(info));
+        } else {
+          notification.open({
+            message: 'User does not exits',
+            description: `${userIdType} id = ${userId}`,
+            icon: <Icon type='warning' />
+          });
+        }
+      }
+    }
+
+    getUseInfoByRouterParam(userId);
+  }, [userId]);
+
+  console.log(userId);
 
   const userInfo = useSelector(state => state.userInfo);
   const [userIdType, setUserIdType] = useState('internal');
@@ -36,23 +60,13 @@ function User(props) {
   };
 
   async function getUserInfo() {
-    await props.form.validateFields(async (err, values) => {
+    props.form.validateFields((err, values) => {
       if (!err) {
         console.log('==== Get User Info ====');
         console.log('userIdType :: ', userIdType);
-        const { userId = false } = values;
-        if (userId) {
-          const info = await reqUserInfo(userId);
-          if (info) {
-            dispatch(setUserInfo(info));
-          } else {
-            notification.open({
-              message: 'User does not exits',
-              description: `${userIdType} id = ${userId}`,
-              icon: <Icon type='warning' />
-            });
-          }
-        }
+        const { userId } = values;
+
+        history.push(`/user/${userId}`);
       }
     });
   }
@@ -90,15 +104,13 @@ function User(props) {
           </InputGroup>
         </Form.Item>
         <Row>
-          <Col   span={12} offset={6} style={{ textAlign: 'center' }}>
-          <Button.Group style={{marginBottom: 20}}>
-          <Button  onClick={getUserInfo}>
-            Get User Info
-          </Button>
-          <Button  onClick={editUserInfo}>
-            {!userInfo._id ? 'Add User Info' : 'Edit User Info'}
-          </Button>
-          </Button.Group>
+          <Col span={12} offset={6} style={{ textAlign: 'center' }}>
+            <Button.Group style={{ marginBottom: 20 }}>
+              <Button onClick={getUserInfo}>Get User Info</Button>
+              <Button onClick={editUserInfo}>
+                {!userInfo._id ? 'Add User Info' : 'Edit User Info'}
+              </Button>
+            </Button.Group>
           </Col>
         </Row>
         {userInfo.exists && <UserInfo />}

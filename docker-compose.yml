@@ -10,6 +10,8 @@ services:
     networks:
       - uploader
     restart: always
+    logging:
+      driver: none
   mongo-primary:
     hostname: mongo-primary
     image: mongo:4
@@ -29,8 +31,8 @@ services:
     networks:
       - uploader
     restart: always
-    # logging:
-    #   driver: none
+    logging:
+      driver: none
   mongo-secondary:
     hostname: mongo-secondary
     image: mongo:4
@@ -52,8 +54,8 @@ services:
     networks:
       - uploader
     restart: always
-    # logging:
-    #   driver: none
+    logging:
+      driver: none
   mongo-setup:
     image: mongo:4
     depends_on:

@@ -59,8 +59,10 @@ function UserInfoEditor(props) {
           // Update User
           values.userId = _id;
           console.log(values);
-          const updatedUser = await reqUpdateUser(values);
-          if (updatedUser._id) {
+          const { resData: updatedUser, reqFailed } = await reqUpdateUser(
+            values
+          );
+          if (!reqFailed && updatedUser._id) {
             dispatch(setUserInfo(updatedUser));
           }
         }

@@ -31,8 +31,7 @@ async function authFetch(url, options) {
     }
 
     const { data: resData } = await axios(config);
-
-    return resData;
+    return { resData, reqFailed: false };
   } catch (error) {
     console.error(error);
     return { reqFailed: true };

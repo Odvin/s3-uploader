@@ -23,8 +23,8 @@ function Skeleton() {
 
   useEffect(() => {
     async function getUploadCases() {
-      const cases = await reqUploadCases();
-      if (!cases.reFailed) {
+      const { resData: cases, reqFailed } = await reqUploadCases();
+      if (!reqFailed) {
         dispatch(setUploadCases(cases));
       } else {
         notification.open({
