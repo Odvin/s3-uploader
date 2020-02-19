@@ -9,19 +9,7 @@ import { reqRemoveUploadCase } from '../../api';
 
 import { removeUploadCase } from '../../redux/actions/uploadCases';
 
-const MBSize = 1024 * 1024;
-
-const filesSizeDescription = (minSize, maxSize) => {
-  const minSizeDesc =
-    minSize > MBSize
-      ? `${Math.floor(minSize / MBSize)} Mb`
-      : `${Math.floor(minSize / 1024)} Kb`;
-  const maxSizeDesc =
-    maxSize > MBSize
-      ? `${Math.floor(maxSize / MBSize)} Mb`
-      : `${Math.floor(minSize / 1024)} Kb`;
-  return `${minSizeDesc}; ${maxSizeDesc}`;
-};
+import { filesSizeDescription } from '../utility';
 
 function Cases(props) {
   const { cases, editCase, removeCase } = props;

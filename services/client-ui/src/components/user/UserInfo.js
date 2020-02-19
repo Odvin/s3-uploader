@@ -4,15 +4,12 @@ import { Row, Col, Statistic, Divider } from 'antd';
 
 import UserUploads from './UserUploads';
 
+import { sizeDescription } from '../utility';
 
 function UserStatistics() {
   const { _id, extId, reseller, storageUsage, storageSize } = useSelector(
     state => state.userInfo
   );
-
-  
-  
-  const MBSize = 1024 * 1024;
 
   return (
     <div>
@@ -26,7 +23,7 @@ function UserStatistics() {
           <Statistic title='User Reseller' value={reseller} />
           <Statistic
             title='Storage Usage / Size'
-            value={`${storageUsage} / ${Math.floor(storageSize/MBSize)}Mb`}
+            value={`${sizeDescription(storageUsage)} / ${sizeDescription(storageSize)}`}
           />
         </Col>
       </Row>

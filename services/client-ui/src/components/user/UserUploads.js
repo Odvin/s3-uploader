@@ -5,6 +5,8 @@ import { List, Tabs } from 'antd';
 import BasicUpload from './BasicUpload';
 import CompletedUploads from './CompletedUploads';
 
+import { filesSizeDescription } from '../utility';
+
 function Cases() {
   const { cases = [] } = useSelector(state => state.userInfo);
   return (
@@ -14,7 +16,7 @@ function Cases() {
         <List.Item key={item._id}>
           <List.Item.Meta
             title={item.name}
-            description={`min: ${item.minSize}; max: ${item.maxSize} (bits)`}
+            description={filesSizeDescription(item.minSize, item.maxSize)}
           />
           {(item.mimes || []).join(';  ')}
         </List.Item>

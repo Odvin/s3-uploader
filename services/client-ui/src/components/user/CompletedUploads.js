@@ -22,25 +22,28 @@ function CompletedUploads() {
 
   async function updateCompletedUploads() {
     setIsLoading(true);
-    
-    const userUploads = await reqUserUploads(userId);
-    setCompletedUserUploads(userUploads);
-    
+
+    const { resData: userUploads, reqFailed } = await reqUserUploads(userId);
+
+    if (!reqFailed) {
+      setCompletedUserUploads(userUploads);
+    }
+
     setIsLoading(false);
   }
 
   return (
     <>
-    <Row>
-      <Col span={4} offset={20}>
-      <Button
-        icon='reload'
-        loading={isLoading}
-        onClick={updateCompletedUploads}
-      >
-        Update
-      </Button>
-      </Col>
+      <Row>
+        <Col span={4} offset={20}>
+          <Button
+            icon='reload'
+            loading={isLoading}
+            onClick={updateCompletedUploads}
+          >
+            Update
+          </Button>
+        </Col>
       </Row>
       {completedUserUploads.length && (
         <List

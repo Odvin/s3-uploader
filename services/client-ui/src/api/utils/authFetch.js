@@ -34,7 +34,7 @@ async function authFetch(url, options) {
     return { resData, reqFailed: false };
   } catch (error) {
     console.error(error);
-    return { reqFailed: true };
+    return { resData: {}, reqFailed: true };
   }
 }
 

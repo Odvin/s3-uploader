@@ -56,12 +56,7 @@ function BasicUpload() {
   ));
 
   async function uploadFileToS3(file, options) {
-    const {
-      minSize,
-      maxSize,
-      uploadCaseName,
-      userId,
-    } = options;
+    const { minSize, maxSize, uploadCaseName, userId } = options;
 
     const result = {
       completed: false,
@@ -82,7 +77,15 @@ function BasicUpload() {
       fileSize: file.size
     };
 
-    const { url, uploadId } = await reqPreSignedUrl(fileInfo);
+    const {
+      resData: { url, uploadId },
+      reqFailed: reqPresignedUrlFailed
+    } = await reqPreSignedUrl(fileInfo);
+
+    if (reqPresignedUrlFailed) {
+      return result;
+    }
+
     const uploadRes = await uploadFile(url, file);
 
     const uploadInfo = {
@@ -92,9 +95,12 @@ function BasicUpload() {
       key: uploadRes.key
     };
 
-    const { completed } = await reqPersistUpload(uploadInfo);
+    const {
+      resData: { completed },
+      reqFailed: reqPersistUploadFailed
+    } = await reqPersistUpload(uploadInfo);
 
-    if (completed) {
+    if (completed && !reqPersistUploadFailed) {
       result.completed = completed;
     }
 
@@ -115,8 +121,11 @@ function BasicUpload() {
     }
 
     if (result.completed) {
-      const storage = await reqUserStorageUsage(userId);
-      dispatch(updateStorageUsage(storage));
+      const { resData, reqFailed } = await reqUserStorageUsage(userId);
+
+      if (!reqFailed) {
+        dispatch(updateStorageUsage(resData));
+      }
     }
 
     return result;
@@ -139,12 +148,11 @@ function BasicUpload() {
     }
   }
 
-
   async function thumb(e) {
     e.preventDefault();
 
     const files = e.target.file.files;
-    if (files == null || files == undefined) {
+    if (files === null || files === undefined) {
       document.write('This Browser has no support for HTML5 FileReader yet!');
       return false;
     }
@@ -204,7 +212,7 @@ function BasicUpload() {
         ctx.drawImage(img, 0, 0, thumbnailWidth, thumbnailHeight);
         const dataURL = canvas.toDataURL();
 
-        if (dataURL != null && dataURL != undefined) {
+        if (dataURL !== null && dataURL !== undefined) {
           const nImg = document.createElement('img');
           nImg.src = dataURL;
           const uploadForm = document.getElementById('uploadPicture');
@@ -220,14 +228,11 @@ function BasicUpload() {
           const i = dataURL.indexOf('base64,');
           const buffer = Buffer.from(dataURL.slice(i + 7), 'base64');
 
-          const thumbnailFile = new File(
-            [buffer],
-            'thumb-300x200.png',
-            { type: 'image/png'}
-          );
-         
-          processFileUpload(thumbnailFile, thumbnailOptions);
+          const thumbnailFile = new File([buffer], 'thumb-300x200.png', {
+            type: 'image/png'
+          });
 
+          processFileUpload(thumbnailFile, thumbnailOptions);
         } else alert('unable to get context');
       }
     };
