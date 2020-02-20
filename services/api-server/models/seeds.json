@@ -17,25 +17,25 @@
     {
       "name": "document",
       "mimes": ["text/plain", "application/pdf"],
-      "minSize": 1048576,
+      "minSize": 1024,
       "maxSize": 10485760
     },
     {
       "name": "thumbnail",
-      "mimes": ["image/png"],
-      "minSize": 1048576,
+      "mimes": ["image/png", "image/jpeg"],
+      "minSize": 1024,
       "maxSize": 31457280
     },
     {
       "name": "picture",
       "mimes": ["image/png", "image/jpeg"],
-      "minSize": 1048576,
+      "minSize": 1024,
       "maxSize": 10485760
     },
     {
       "name": "video",
       "mimes": ["audio/mpeg", "audio/ogg"],
-      "minSize": 1048576,
+      "minSize": 1024,
       "maxSize": 104857600
     }
   ]

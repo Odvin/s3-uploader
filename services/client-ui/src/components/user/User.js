@@ -47,8 +47,6 @@ function User(props) {
     getUseInfoByRouterParam(userId);
   }, [userId]);
 
-  console.log(userId);
-
   const userInfo = useSelector(state => state.userInfo);
   const [userIdType, setUserIdType] = useState('internal');
 
@@ -59,12 +57,13 @@ function User(props) {
     wrapperCol: { span: 18 }
   };
 
-  async function getUserInfo() {
+  function getUserInfo() {
     props.form.validateFields((err, values) => {
       if (!err) {
+        const { userId } = values;
         console.log('==== Get User Info ====');
         console.log('userIdType :: ', userIdType);
-        const { userId } = values;
+        console.log('userId :: ', userId);
 
         history.push(`/user/${userId}`);
       }
