@@ -20,7 +20,7 @@ function Routs() {
     >
       <Route path='/' component={Dashboard} exact />
       <Route path='/upload-cases' component={UploadCases} exact />
-      <Route path='/user/:userId?' component={User} />
+      <Route path='/user/:userId?/:userIdType?/' component={User} />
     </Content>
   );
 }

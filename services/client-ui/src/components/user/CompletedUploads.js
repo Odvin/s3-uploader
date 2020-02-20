@@ -35,7 +35,7 @@ function CompletedUploads() {
   return (
     <>
       <Row>
-        <Col span={4} offset={20}>
+        <Col style={{textAlign: 'right'}}>
           <Button
             icon='reload'
             loading={isLoading}

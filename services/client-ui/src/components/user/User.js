@@ -1,35 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import {
-  Row,
-  Col,
-  Form,
-  Input,
-  Button,
-  Select,
-  notification,
-  Icon
-} from 'antd';
+import { Modal, Row, Col, Button, notification, Icon } from 'antd';
 
-import UserInfoEditor from './UserInfoEditor';
+import UserForm from './UserForm';
+import UserInfoForm from './UserInfoForm';
 
 import { reqUserInfo } from '../../api';
-import { setUserInfo, showCaseEditor } from '../../redux/actions/userInfo';
+import { setUserInfo } from '../../redux/actions/userInfo';
 
-import UserInfo from './UserInfo';
+import UserStatistics from './UserStatistics';
 
-const InputGroup = Input.Group;
-const { Option } = Select;
-
-function User(props) {
+function User() {
   const dispatch = useDispatch();
-  let history = useHistory();
-  const { userId } = useParams();
+  const { userId, userIdType } = useParams();
+
+  const [isEditorVisible, setIsEditorVisible] = useState(false);
+  const [whatToDoWithUser, setWhatToDoWithUser] = useState('create');
 
   useEffect(() => {
-    async function getUseInfoByRouterParam(userId) {
+    async function getUseInfoByRouterParam(userId, userIdType) {
       if (userId) {
         const { resData: info, reqFailed } = await reqUserInfo(userId);
         if (!reqFailed) {
@@ -37,86 +28,69 @@ function User(props) {
         } else {
           notification.open({
             message: 'User does not exits',
-            description: `${userIdType} id = ${userId}`,
+            description: `ID (${userIdType}) = ${userId}`,
             icon: <Icon type='warning' />
           });
         }
       }
     }
 
-    getUseInfoByRouterParam(userId);
-  }, [userId]);
+    getUseInfoByRouterParam(userId, userIdType);
+  }, [userId, userIdType, dispatch]);
 
-  const userInfo = useSelector(state => state.userInfo);
-  const [userIdType, setUserIdType] = useState('internal');
+  const { _id: userInfoId, exists: userInfoExists } = useSelector(
+    state => state.userInfo
+  );
 
-  const { getFieldDecorator } = props.form;
-
-  const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 }
-  };
-
-  function getUserInfo() {
-    props.form.validateFields((err, values) => {
-      if (!err) {
-        const { userId } = values;
-        console.log('==== Get User Info ====');
-        console.log('userIdType :: ', userIdType);
-        console.log('userId :: ', userId);
-
-        history.push(`/user/${userId}`);
-      }
-    });
+  function activateEditor(actionType) {
+    setIsEditorVisible(true);
+    setWhatToDoWithUser(actionType);
   }
 
-  async function editUserInfo() {
-    const userId = userInfo._id || null;
-    console.log('=== Edit User Info ===');
-    console.log('User ID: ', userId);
-
-    dispatch(showCaseEditor(true));
+  function closeEditor() {
+    setIsEditorVisible(false);
   }
 
   return (
-    <Row>
-      <Col span={12} offset={6}>
-        <Form.Item {...formItemLayout} label='UserID'>
-          <InputGroup compact>
-            <Select
-              name='idType'
-              style={{ width: '30%' }}
-              defaultValue={userIdType}
-              onChange={setUserIdType}
-            >
-              <Option value='internal'>Internal</Option>
-              <Option value='external'>External</Option>
-            </Select>
-            {getFieldDecorator('userId', {
-              rules: [
-                {
-                  required: true,
-                  message: 'UserID is required.'
-                }
-              ]
-            })(<Input style={{ width: '60%' }} placeholder='Set UserID' />)}
-          </InputGroup>
-        </Form.Item>
-        <Row>
-          <Col span={12} offset={6} style={{ textAlign: 'center' }}>
-            <Button.Group style={{ marginBottom: 20 }}>
-              <Button onClick={getUserInfo}>Get User Info</Button>
-              <Button onClick={editUserInfo}>
-                {!userInfo._id ? 'Add User Info' : 'Edit User Info'}
+    <>
+      <Row>
+        <Col span={12} offset={6}>
+          <UserForm />
+
+          <div style={{ textAlign: 'center', marginTop: 20, marginLeft: -20 }}>
+            <Button.Group>
+              <Button onClick={() => activateEditor('create')}>
+                Add User
+              </Button>
+
+              <Button
+                onClick={() => activateEditor('edit')}
+                disabled={!userInfoId}
+              >
+                Edit User
               </Button>
             </Button.Group>
-          </Col>
-        </Row>
-        {userInfo.exists && <UserInfo />}
-      </Col>
-      <UserInfoEditor />
-    </Row>
+          </div>
+
+          {userInfoExists && <UserStatistics />}
+        </Col>
+      </Row>
+
+      <Modal
+        visible={isEditorVisible}
+        title='Add / Edit User Info'
+        onCancel={closeEditor}
+        footer={null}
+      >
+        {isEditorVisible && (
+          <UserInfoForm
+            whatToDoWithUser={whatToDoWithUser}
+            closeEditor={closeEditor}
+          />
+        )}
+      </Modal>
+    </>
   );
 }
 
-export default Form.create({ name: 'userInfo' })(User);
+export default User;

@@ -12,10 +12,10 @@ function UserStatistics() {
   );
 
   return (
-    <div>
+    <>
       <Divider>User Info </Divider>
-      <Row gutter={14}>
-        <Col span={15}>
+      <Row gutter={12}>
+        <Col span={16}>
           <Statistic title='Internal UserID' value={_id} />
           <Statistic title='External UserID' value={extId} />
         </Col>
@@ -30,7 +30,7 @@ function UserStatistics() {
       <Divider />
       
       <UserUploads />
-    </div>
+    </>
   );
 }
 

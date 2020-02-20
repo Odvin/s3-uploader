@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Form, Input, Slider, Select, Button, notification, Icon } from 'antd';
+import { Form, Input, Select, Button, notification, Icon } from 'antd';
 
 import { reqUpdateUploadCase, reqCreateUploadCase } from '../../api';
 
@@ -77,7 +77,7 @@ function UploadCaseForm(props) {
             });
           }
         }
-        setProcessCaseUpdate(true);
+        setProcessCaseUpdate(false);
         closeUploadCaseEditor();
       }
     });
